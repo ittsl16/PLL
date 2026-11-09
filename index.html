@@ -1,0 +1,2914 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#CF002E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title> Pallets Chep · Enterprise</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Bricolage+Grotesque:wght@600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+<style>
+:root {
+  --red: #CF002E; --red-dark: #960020; --red-tint: #FFF0F3;
+  --yellow: #FDD000; --yellow-dark: #E5BC00; --yellow-tint: #FFFAE0;
+  --ink: #0F1115; --ink-soft: #2A2D33; --gray-900: #1A1A1A;
+  --gray-700: #4B5058; --gray-500: #6B7280; --gray-300: #D1D5DB;
+  --gray-200: #E5E7EB; --gray-100: #F3F4F6; --gray-50: #F9FAFB; --white: #FFFFFF;
+  --ok: #0A7F3E; --ok-tint: #E6F7EE; --warn: #8B6B00;
+  --warn-tint: rgba(253,208,0,0.18); --danger: var(--red); --danger-tint: rgba(207,0,46,0.08);
+  --grad-brand: linear-gradient(160deg, #FFFFFF 0%, #FDD000 100%);
+  --grad-header: linear-gradient(135deg, #CF002E 0%, #960020 100%);
+  --grad-mesa: linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%);
+  --grad-despacho: linear-gradient(135deg, #1F2937 0%, #374151 100%);
+  --grad-supervisor: linear-gradient(135deg, #0F1115 0%, #2A2D33 100%);
+  --shadow-xs: 0 1px 2px rgba(15,17,21,.06);
+  --shadow-sm: 0 1px 3px rgba(15,17,21,.08), 0 1px 2px rgba(15,17,21,.04);
+  --shadow-md: 0 4px 12px rgba(15,17,21,.08), 0 2px 4px rgba(15,17,21,.04);
+  --shadow-lg: 0 12px 32px rgba(15,17,21,.10), 0 4px 12px rgba(15,17,21,.06);
+  --shadow-xl: 0 24px 64px rgba(15,17,21,.14), 0 8px 24px rgba(15,17,21,.08);
+  --shadow-inset: inset 0 1px 0 rgba(255,255,255,.6);
+  --r-xs: 4px; --r-sm: 6px; --r-md: 10px; --r-lg: 14px; --r-xl: 20px;
+  --f-display: 'Bricolage Grotesque', 'Inter', system-ui, sans-serif;
+  --f-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --f-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --role-grad: var(--grad-header); --role-color: var(--red);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; }
+body { font-family: var(--f-body); background: var(--gray-50); color: var(--ink); min-height: 100vh; overflow-x: hidden; letter-spacing: -0.005em; font-feature-settings: "cv11","ss01","ss02"; -webkit-font-smoothing: antialiased; }
+#splash { position: fixed; inset: 0; z-index: 999; background: var(--yellow); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; padding: 24px; transition: opacity .45s, transform .45s; }
+#splash.hide { opacity: 0; transform: translateY(-12px); pointer-events: none; }
+#splash::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle at 18% 22%, rgba(207,0,46,.06) 0, transparent 40%), radial-gradient(circle at 82% 78%, rgba(253,208,0,.10) 0, transparent 35%); pointer-events: none; }
+.splash-stack { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 18px; width: min(94vw, 440px); }
+.splash-logo { width: 88px; height: 88px; background: var(--yellow); border-radius: 18px; box-shadow: var(--shadow-lg), var(--shadow-inset); display: flex; align-items: center; justify-content: center; border: 1px solid rgba(15,17,21,.06); }
+.splash-logo img { max-width: 70%; max-height: 70%; object-fit: contain; }
+.splash-title { font-family: var(--f-display); font-size: 22px; font-weight: 800; color: var(--ink); text-align: center; letter-spacing: -0.02em; line-height: 1.05; }
+.splash-title small { display: block; margin-top: 6px; font-family: var(--f-mono); font-size: 10px; font-weight: 500; opacity: .65; letter-spacing: .2em; text-transform: uppercase; }
+.splash-divider { width: 64px; height: 2px; background: var(--ink); border-radius: 2px; opacity: .85; }
+.role-selector { width: 100%; }
+.role-selector h3 { font-family: var(--f-mono); font-size: 10px; font-weight: 700; color: var(--gray-700); text-transform: uppercase; letter-spacing: .22em; text-align: center; margin-bottom: 14px; }
+.role-cards { display: grid; grid-template-columns: 1fr; gap: 8px; }
+.role-card { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--r-md); padding: 14px 16px; display: flex; align-items: center; gap: 14px; cursor: pointer; box-shadow: var(--shadow-xs); transition: transform .18s cubic-bezier(.4,.0,.2,1), box-shadow .18s, border-color .18s; position: relative; overflow: hidden; }
+.role-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--red); opacity: 0; transition: opacity .18s; }
+.role-card:hover, .role-card:active { transform: translateY(-1px); box-shadow: var(--shadow-md); border-color: var(--red); }
+.role-card:hover::before, .role-card:active::before { opacity: 1; }
+.role-badge { width: 42px; height: 42px; border-radius: var(--r-sm); display: flex; align-items: center; justify-content: center; font-family: var(--f-mono); font-size: 11px; font-weight: 800; color: var(--white); flex-shrink: 0; box-shadow: var(--shadow-xs); }
+.role-badge.auditor { background: var(--red); }
+.role-badge.mesa { background: var(--gray-900); }
+.role-badge.despacho { background: var(--gray-700); }
+.role-badge.supervisor { background: var(--ink); }
+.role-text { flex: 1; min-width: 0; }
+.role-name { font-family: var(--f-display); font-size: 15px; font-weight: 700; color: var(--ink); letter-spacing: -.01em; }
+.role-desc { font-size: 11px; color: var(--gray-500); margin-top: 2px; letter-spacing: -.005em; }
+.role-arrow { font-size: 18px; color: var(--gray-300); font-weight: 300; }
+.role-card:hover .role-arrow { color: var(--red); }
+.login-panel { display: none; width: 100%; flex-direction: column; gap: 12px; }
+.login-panel.visible { display: flex; }
+.login-back { font-family: var(--f-mono); font-size: 10px; font-weight: 700; color: var(--gray-700); cursor: pointer; letter-spacing: .15em; text-transform: uppercase; display: inline-flex; align-items: center; gap: 6px; padding: 6px 0; width: fit-content; transition: color .15s; }
+.login-back:hover { color: var(--red); }
+.login-card { background: var(--white); border-radius: var(--r-lg); padding: 22px 20px; box-shadow: var(--shadow-xl); border: 1px solid var(--gray-200); border-top: 3px solid var(--red); }
+.lc-head { display: flex; align-items: center; gap: 12px; padding-bottom: 14px; margin-bottom: 16px; border-bottom: 1px solid var(--gray-200); }
+.lc-icon { width: 40px; height: 40px; border-radius: var(--r-sm); display: flex; align-items: center; justify-content: center; font-family: var(--f-mono); font-size: 11px; font-weight: 800; color: var(--white); }
+.lc-icon.auditor { background: var(--red); }
+.lc-icon.mesa { background: var(--gray-900); }
+.lc-icon.despacho { background: var(--gray-700); }
+.lc-icon.supervisor { background: var(--ink); }
+.lc-title { font-family: var(--f-display); font-size: 16px; font-weight: 700; color: var(--ink); }
+.lc-sub { font-size: 11px; color: var(--gray-500); margin-top: 2px; }
+.dev-credit { font-family: var(--f-mono); font-size: 9px; color: var(--gray-500); letter-spacing: .25em; text-transform: uppercase; text-align: center; margin-top: 12px; padding-top: 14px; border-top: 1px solid rgba(15,17,21,.08); width: 100%; }
+.dev-credit strong { color: var(--ink); font-weight: 700; }
+#app { display: none; }
+header.app-header { color: var(--white); position: sticky; top: 0; z-index: 100; background: var(--role-grad); box-shadow: var(--shadow-md); }
+.app-header-inner { display: flex; align-items: center; gap: 12px; padding: 12px 18px; max-width: 1280px; margin: 0 auto; }
+.brand-mark { width: 36px; height: 36px; background: var(--yellow); border-radius: var(--r-sm); display: flex; align-items: center; justify-content: center; font-family: var(--f-display); font-weight: 800; font-size: 14px; color: var(--red); flex-shrink: 0; box-shadow: var(--shadow-xs); letter-spacing: -.02em; }
+.brand-text { flex: 1; min-width: 0; }
+.brand-text h1 { font-family: var(--f-display); font-size: 16px; font-weight: 700; letter-spacing: -.015em; line-height: 1.15; }
+.brand-meta { font-family: var(--f-mono); font-size: 10px; opacity: .65; letter-spacing: .12em; text-transform: uppercase; }
+.header-user { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; font-size: 11px; }
+.header-user .u-name { font-weight: 600; }
+.header-user .u-meta { opacity: .68; font-family: var(--f-mono); font-size: 10px; }
+.header-user .u-pill { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 99px; font-size: 9px; font-weight: 700; letter-spacing: .08em; background: rgba(255,255,255,.18); color: var(--white); text-transform: uppercase; margin-top: 3px; }
+.app-nav { display: flex; background: rgba(0,0,0,.22); border-top: 1px solid rgba(255,255,255,.08); overflow-x: auto; }
+.app-nav::-webkit-scrollbar { display: none; }
+.nav-tab { flex: 1; min-width: 70px; padding: 9px 6px; text-align: center; cursor: pointer; font-family: var(--f-mono); font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; color: rgba(255,255,255,.55); border-bottom: 2px solid transparent; transition: all .18s; position: relative; line-height: 1.3; }
+.nav-tab.active { color: var(--yellow); border-bottom-color: var(--yellow); background: rgba(255,255,255,.04); }
+.nav-tab .nt-icon { display: block; font-size: 16px; margin-bottom: 3px; font-family: var(--f-body); letter-spacing: 0; }
+.nav-badge { position: absolute; top: 4px; right: 6px; background: var(--yellow); color: var(--ink); border-radius: 99px; padding: 1px 5px; font-size: 8px; font-weight: 800; line-height: 1.4; }
+main { padding: 18px 14px 40px; max-width: 1280px; margin: 0 auto; }
+.section-head { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--gray-200); }
+.section-icon { width: 44px; height: 44px; border-radius: var(--r-md); background: var(--grad-brand); display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: var(--shadow-sm); border: 1px solid var(--gray-200); }
+.section-title { font-family: var(--f-display); font-size: 20px; font-weight: 700; letter-spacing: -.015em; }
+.section-desc { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+.kpi-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; margin-bottom: 16px; }
+.kpi { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--r-md); padding: 12px 14px; box-shadow: var(--shadow-xs); position: relative; overflow: hidden; }
+.kpi::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--gray-300); }
+.kpi.kpi-brand::before { background: var(--red); }
+.kpi.kpi-yellow::before { background: var(--yellow); }
+.kpi.kpi-ok::before { background: var(--ok); }
+.kpi.kpi-danger::before { background: var(--danger); }
+.kpi .kpi-label { font-family: var(--f-mono); font-size: 9px; font-weight: 700; color: var(--gray-500); text-transform: uppercase; letter-spacing: .12em; }
+.kpi .kpi-value { font-family: var(--f-display); font-size: 24px; font-weight: 800; letter-spacing: -.02em; margin-top: 4px; line-height: 1; }
+.kpi .kpi-foot { font-size: 10px; color: var(--gray-500); margin-top: 4px; }
+.card { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--r-md); padding: 18px; margin-bottom: 12px; box-shadow: var(--shadow-xs); }
+.card-title { font-family: var(--f-display); font-size: 14px; font-weight: 700; color: var(--ink); display: flex; align-items: center; gap: 8px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 2px solid var(--yellow); letter-spacing: -.01em; }
+.card-title .ct-dot { width: 8px; height: 8px; border-radius: 2px; background: var(--red); flex-shrink: 0; }
+.card-title.ct-mesa .ct-dot { background: var(--gray-900); }
+.card-title.ct-despacho .ct-dot { background: var(--gray-700); }
+.card-title.ct-ok .ct-dot { background: var(--ok); }
+.form-row { margin-bottom: 14px; }
+.form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+@media (max-width: 480px) { .form-row-3 { grid-template-columns: 1fr 1fr; } }
+label { display: block; font-family: var(--f-mono); font-size: 9px; font-weight: 700; color: var(--gray-700); text-transform: uppercase; letter-spacing: .12em; margin-bottom: 6px; }
+label .req { color: var(--red); }
+label .opt { display: inline-block; margin-left: 6px; font-size: 9px; font-weight: 700; background: var(--ok-tint); color: var(--ok); padding: 2px 7px; border-radius: 99px; text-transform: uppercase; letter-spacing: .1em; }
+input[type="text"], input[type="number"], input[type="date"], input[type="time"], select, textarea { width: 100%; padding: 10px 12px; border: 1.5px solid var(--gray-200); border-radius: var(--r-sm); font-family: var(--f-body); font-size: 13px; color: var(--ink); background: var(--white); transition: border-color .15s, box-shadow .15s, background .15s; appearance: none; -webkit-appearance: none; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--red); box-shadow: 0 0 0 3px rgba(207,0,46,.10); }
+select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23CF002E' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 34px; }
+textarea { resize: vertical; min-height: 72px; }
+input:disabled, select:disabled { opacity: .55; cursor: not-allowed; background: var(--gray-100); }
+.prefix-group { display: flex; align-items: stretch; }
+.prefix-label { background: var(--gray-100); border: 1.5px solid var(--gray-200); border-right: none; border-radius: var(--r-sm) 0 0 var(--r-sm); padding: 10px 12px; font-family: var(--f-mono); font-size: 11px; font-weight: 700; color: var(--gray-700); display: flex; align-items: center; }
+.prefix-group input { border-radius: 0 var(--r-sm) var(--r-sm) 0; border-left: none; }
+.combo { position: relative; }
+.combo-input { width: 100%; }
+.combo-list { position: absolute; left: 0; right: 0; top: calc(100% + 4px); background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--r-sm); box-shadow: var(--shadow-lg); max-height: 220px; overflow-y: auto; z-index: 10; display: none; }
+.combo-list.open { display: block; }
+.combo-item { padding: 9px 12px; font-size: 13px; cursor: pointer; border-bottom: 1px solid var(--gray-100); }
+.combo-item:hover, .combo-item.highlighted { background: var(--yellow-tint); color: var(--ink); }
+.combo-item:last-child { border-bottom: none; }
+.combo-empty { padding: 12px; font-size: 12px; color: var(--gray-500); text-align: center; }
+.toggle-group { display: flex; gap: 6px; flex-wrap: wrap; }
+.toggle-opt { flex: 1; min-width: 80px; padding: 9px 10px; border: 1.5px solid var(--gray-200); border-radius: var(--r-sm); text-align: center; cursor: pointer; font-size: 12px; font-weight: 600; color: var(--gray-700); background: var(--white); transition: all .15s; user-select: none; }
+.toggle-opt.selected { border-color: var(--red); background: var(--red-tint); color: var(--red); font-weight: 700; }
+.toggle-opt.selected.ok { border-color: var(--ok); background: var(--ok-tint); color: var(--ok); }
+.toggle-opt.selected.yellow { border-color: var(--yellow-dark); background: var(--yellow-tint); color: var(--warn); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 12px 18px; border-radius: var(--r-sm); font-family: var(--f-body); font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: transform .12s, box-shadow .15s, background .15s; width: 100%; letter-spacing: -.005em; }
+.btn:active { transform: scale(.985); }
+.btn:disabled { opacity: .45; cursor: not-allowed; transform: none !important; }
+.btn-primary { background: var(--red); color: var(--white); box-shadow: 0 2px 10px rgba(207,0,46,.22); }
+.btn-primary:hover { background: var(--red-dark); }
+.btn-yellow { background: var(--yellow); color: var(--ink); box-shadow: 0 2px 10px rgba(253,208,0,.30); }
+.btn-yellow:hover { background: var(--yellow-dark); }
+.btn-dark { background: var(--ink); color: var(--white); box-shadow: 0 2px 10px rgba(15,17,21,.18); }
+.btn-dark:hover { background: var(--gray-900); }
+.btn-ghost { background: transparent; color: var(--red); border: 1.5px solid var(--red); }
+.btn-ghost:hover { background: var(--red-tint); }
+.btn-danger { background: #C0392B; color: var(--white); box-shadow: 0 2px 10px rgba(192,57,43,.22); }
+.btn-sm { padding: 7px 12px; font-size: 11px; width: auto; }
+.note { font-size: 12px; line-height: 1.55; padding: 10px 12px; border-radius: var(--r-sm); margin-bottom: 10px; }
+.note.info { background: var(--gray-100); color: var(--gray-700); border-left: 3px solid var(--gray-300); }
+.note.warn { background: var(--warn-tint); color: var(--warn); border-left: 3px solid var(--yellow-dark); }
+.note.ok { background: var(--ok-tint); color: var(--ok); border-left: 3px solid var(--ok); }
+.note.danger { background: var(--danger-tint); color: var(--red); border-left: 3px solid var(--red); }
+.note strong { font-weight: 700; }
+.pendiente-panel { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--r-md); overflow: hidden; margin-bottom: 12px; box-shadow: var(--shadow-xs); }
+.pp-head { padding: 11px 16px; display: flex; align-items: center; gap: 10px; font-family: var(--f-display); font-size: 14px; font-weight: 700; color: var(--white); letter-spacing: -.01em; }
+.pp-head.brand { background: var(--red); }
+.pp-head.yellow { background: var(--yellow); color: var(--ink); }
+.pp-head.dark { background: var(--ink); }
+.pp-head.desp { background: var(--gray-700); }
+.pp-head .pp-count { margin-left: auto; background: rgba(255,255,255,.22); padding: 2px 9px; border-radius: 99px; font-size: 11px; font-weight: 700; }
+.pp-head.yellow .pp-count { background: rgba(15,17,21,.12); color: var(--ink); }
+.pp-item { padding: 12px 16px; border-bottom: 1px solid var(--gray-200); display: flex; align-items: flex-start; gap: 12px; }
+.pp-item:last-child { border-bottom: none; }
+.pp-item:hover { background: var(--gray-50); }
+.pp-icon { width: 36px; height: 36px; border-radius: var(--r-sm); background: var(--gray-100); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.pp-body { flex: 1; min-width: 0; }
+.pp-title { font-family: var(--f-display); font-size: 14px; font-weight: 700; color: var(--ink); letter-spacing: -.01em; }
+.pp-meta { font-size: 11px; color: var(--gray-500); margin-top: 3px; line-height: 1.5; }
+.pp-actions { display: flex; gap: 7px; margin-top: 9px; flex-wrap: wrap; }
+.pp-btn { padding: 6px 12px; border-radius: var(--r-xs); font-size: 11px; font-weight: 700; cursor: pointer; border: none; text-transform: uppercase; letter-spacing: .08em; font-family: var(--f-mono); }
+.pp-btn.primary { background: var(--red); color: var(--white); }
+.pp-btn.yellow { background: var(--yellow); color: var(--ink); }
+.pp-btn.ghost { background: var(--gray-100); color: var(--ink); }
+.status { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 99px; font-family: var(--f-mono); font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; }
+.status.nuevo { background: rgba(253,208,0,.18); color: var(--warn); }
+.status.herencia { background: var(--yellow-tint); color: var(--warn); }
+.status.auditado { background: var(--gray-100); color: var(--ink); }
+.status.mesa_ok { background: var(--red-tint); color: var(--red); }
+.status.cerrado { background: var(--ok-tint); color: var(--ok); }
+.status.cerrado_con_incidencias { background: rgba(207,0,46,.10); color: var(--red); }
+.status.cancelado { background: rgba(192,57,43,.12); color: #C0392B; }
+.bandeja { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--r-md); overflow: hidden; box-shadow: var(--shadow-xs); margin-bottom: 12px; }
+.bandeja-head { padding: 12px 16px; background: var(--ink); color: var(--white); display: flex; align-items: center; gap: 10px; }
+.bandeja-head h3 { font-family: var(--f-display); font-size: 14px; font-weight: 700; letter-spacing: -.01em; }
+.bandeja-table-wrap { overflow-x: auto; }
+table.bandeja-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+table.bandeja-table th { background: var(--gray-100); color: var(--gray-700); font-family: var(--f-mono); font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--gray-200); white-space: nowrap; }
+table.bandeja-table td { padding: 10px 12px; border-bottom: 1px solid var(--gray-100); vertical-align: middle; }
+table.bandeja-table tr:hover td { background: var(--gray-50); }
+table.bandeja-table .col-id { font-family: var(--f-mono); font-size: 10px; color: var(--gray-500); }
+.photo-zone { border: 2px dashed var(--gray-300); border-radius: var(--r-md); padding: 22px 18px; text-align: center; cursor: pointer; position: relative; overflow: hidden; background: var(--gray-50); transition: border-color .15s, background .15s; }
+.photo-zone:hover { border-color: var(--red); background: var(--red-tint); }
+.photo-zone.drag-active { border-color: var(--red); background: var(--red-tint); transform: scale(1.01); }
+.photo-zone .pz-icon { font-size: 32px; margin-bottom: 6px; opacity: .7; }
+.photo-zone p { font-size: 12px; color: var(--gray-700); font-weight: 600; }
+.photo-zone span { font-size: 10px; color: var(--gray-500); display: block; margin-top: 3px; }
+.photo-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; border: none; background: none; padding: 0; }
+.photo-zone.opt { border-color: var(--ok); background: var(--ok-tint); }
+.photo-zone.opt p { color: var(--ok); }
+.photo-previews { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px,1fr)); gap: 8px; margin-top: 10px; }
+.photo-thumb { aspect-ratio: 1; border-radius: var(--r-sm); overflow: hidden; position: relative; box-shadow: var(--shadow-sm); }
+.photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.photo-thumb .ph-del { position: absolute; top: 4px; right: 4px; width: 22px; height: 22px; background: var(--red); color: var(--white); border-radius: 50%; border: none; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+.progress-bar { height: 3px; background: var(--gray-200); border-radius: 99px; overflow: hidden; margin-top: 6px; display: none; }
+.progress-bar.visible { display: block; }
+.progress-bar .inner { height: 100%; background: var(--ok); width: 0%; transition: width .3s; }
+.modal-overlay { position: fixed; inset: 0; z-index: 500; background: rgba(15,17,21,.55); backdrop-filter: blur(4px); display: flex; align-items: flex-end; justify-content: center; opacity: 0; pointer-events: none; transition: opacity .25s; }
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal { background: var(--white); width: 100%; max-width: 720px; border-radius: var(--r-lg) var(--r-lg) 0 0; padding: 22px 18px 36px; transform: translateY(40px); transition: transform .28s cubic-bezier(.34,1.2,.64,1); max-height: 92vh; overflow-y: auto; box-shadow: var(--shadow-xl); }
+.modal-overlay.open .modal { transform: translateY(0); }
+.modal-handle { width: 40px; height: 4px; background: var(--gray-300); border-radius: 99px; margin: 0 auto 18px; }
+.modal-title { font-family: var(--f-display); font-size: 18px; font-weight: 700; margin-bottom: 16px; letter-spacing: -.015em; }
+.excel-zone { border: 2px dashed var(--gray-300); border-radius: var(--r-md); padding: 14px; background: var(--gray-50); }
+.excel-zone textarea { font-family: var(--f-mono); font-size: 12px; background: var(--white); min-height: 120px; }
+table.preview { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; background: var(--white); border-radius: var(--r-sm); overflow: hidden; border: 1px solid var(--gray-200); }
+table.preview th { background: var(--ink); color: var(--white); padding: 8px 10px; font-family: var(--f-mono); font-size: 9px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; text-align: left; }
+table.preview td { padding: 8px 10px; border-bottom: 1px solid var(--gray-100); }
+table.preview tr.row-ok td { background: rgba(10,127,62,.04); }
+table.preview tr.row-warn td { background: rgba(253,208,0,.10); }
+table.preview tr.row-err td { background: var(--danger-tint); }
+.val-ok   { color: var(--ok);   font-size: 10px; font-weight: 700; }
+.val-warn { color: var(--warn); font-size: 10px; font-weight: 700; }
+.val-err  { color: var(--red);  font-size: 10px; font-weight: 700; }
+.timeline { padding-left: 14px; border-left: 2px solid var(--gray-200); margin-top: 8px; }
+.tl-item { position: relative; padding: 8px 0 8px 16px; }
+.tl-item::before { content: ''; position: absolute; left: -21px; top: 12px; width: 10px; height: 10px; border-radius: 50%; background: var(--red); box-shadow: 0 0 0 3px var(--white), 0 0 0 4px var(--gray-200); }
+.tl-item.ok::before { background: var(--ok); }
+.tl-item.warn::before { background: var(--yellow); }
+.tl-head { font-size: 12px; font-weight: 700; color: var(--ink); }
+.tl-meta { font-size: 11px; color: var(--gray-500); margin-top: 2px; }
+.tl-detail { font-size: 11px; color: var(--gray-700); margin-top: 4px; line-height: 1.5; }
+.area-tabs { display: flex; gap: 6px; margin-bottom: 14px; border-bottom: 1px solid var(--gray-200); overflow-x: auto; }
+.area-tab { padding: 9px 14px; font-family: var(--f-mono); font-size: 10px; font-weight: 700; color: var(--gray-500); text-transform: uppercase; letter-spacing: .12em; cursor: pointer; white-space: nowrap; border-bottom: 2px solid transparent; transition: color .15s, border-color .15s; }
+.area-tab.active { color: var(--red); border-bottom-color: var(--red); }
+.area-content { display: none; }
+.area-content.active { display: block; }
+.evidence-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); gap: 10px; }
+.ev-card { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--r-sm); overflow: hidden; box-shadow: var(--shadow-xs); transition: transform .15s, box-shadow .15s; text-decoration: none; color: inherit; }
+.ev-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.ev-card img { width: 100%; aspect-ratio: 4/3; object-fit: cover; background: var(--gray-100); display: block; }
+.ev-card .ev-doc { width: 100%; aspect-ratio: 4/3; background: var(--gray-100); display: flex; align-items: center; justify-content: center; font-size: 36px; color: var(--gray-500); }
+.ev-card .ev-info { padding: 8px 10px; }
+.ev-card .ev-name { font-size: 11px; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ev-card .ev-meta { font-family: var(--f-mono); font-size: 9px; color: var(--gray-500); margin-top: 2px; letter-spacing: .08em; text-transform: uppercase; }
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px; }
+@media (max-width: 480px) { .detail-grid { grid-template-columns: 1fr; } }
+.dt-item { display: flex; flex-direction: column; gap: 2px; padding: 8px 10px; background: var(--gray-50); border-radius: var(--r-xs); border-left: 3px solid var(--gray-300); }
+.dt-label { font-family: var(--f-mono); font-size: 9px; color: var(--gray-500); text-transform: uppercase; letter-spacing: .12em; font-weight: 700; }
+.dt-value { font-size: 13px; font-weight: 600; color: var(--ink); }
+.dt-item.dt-brand { border-left-color: var(--red); }
+.dt-item.dt-yellow { border-left-color: var(--yellow); }
+.dt-item.dt-ok { border-left-color: var(--ok); background: var(--ok-tint); }
+.dt-item.dt-danger { border-left-color: var(--red); background: var(--danger-tint); }
+.asset-block { background: linear-gradient(135deg, var(--yellow-tint), rgba(253,208,0,.05)); border: 1px solid var(--yellow-dark); border-radius: var(--r-md); padding: 14px; margin-bottom: 12px; }
+.asset-block .ab-title { font-family: var(--f-display); font-size: 13px; font-weight: 700; color: var(--warn); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+.accent-line { height: 2px; background: linear-gradient(90deg, var(--red), var(--yellow)); border-radius: 99px; margin: 16px 0; opacity: .9; }
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(120%); background: var(--ink); color: var(--white); padding: 12px 22px; border-radius: 99px; font-size: 12px; font-weight: 600; z-index: 9999; transition: transform .3s cubic-bezier(.34,1.5,.64,1); box-shadow: var(--shadow-xl); max-width: 92vw; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.success { background: var(--ok); }
+.toast.error { background: var(--red); }
+.toast.warn { background: var(--warn); color: var(--yellow); }
+.tab-content { display: none; animation: fadeIn .25s ease; }
+.tab-content.active { display: block; }
+.hidden { display: none !important; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+.sync-banner { display: flex; align-items: center; gap: 10px; background: var(--gray-100); border: 1px solid var(--gray-200); border-radius: var(--r-md); padding: 10px 14px; margin-bottom: 12px; font-size: 11px; color: var(--gray-700); }
+.sync-banner .sb-icon { font-size: 16px; }
+.sync-banner button { margin-left: auto; background: var(--ink); color: var(--white); border: none; padding: 6px 12px; border-radius: var(--r-xs); font-family: var(--f-mono); font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; }
+.empty { text-align: center; padding: 40px 20px; color: var(--gray-500); }
+.empty .em-icon { font-size: 44px; margin-bottom: 10px; opacity: .5; }
+.empty .em-title { font-family: var(--f-display); font-size: 16px; font-weight: 700; color: var(--ink); }
+.empty .em-sub { font-size: 12px; margin-top: 4px; }
+.heritage-banner { background: var(--yellow-tint); border: 1.5px solid var(--yellow-dark); border-radius: var(--r-md); padding: 14px; margin-bottom: 14px; }
+.heritage-banner .hb-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.heritage-banner .hb-title { font-family: var(--f-display); font-size: 14px; font-weight: 700; color: var(--warn); }
+.cancel-row { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--danger-tint); border: 1px solid rgba(192,57,43,.3); border-radius: var(--r-sm); cursor: pointer; margin-bottom: 6px; transition: background .15s; }
+.cancel-row:hover { background: rgba(192,57,43,.10); }
+.cancel-row .cr-unit { font-size: 12px; font-weight: 700; color: #C0392B; flex: 1; }
+.cancel-row .cr-meta { font-size: 10px; color: var(--gray-700); }
+.cancel-row .cr-badge { font-family: var(--f-mono); font-size: 9px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; background: #C0392B; color: var(--white); padding: 3px 9px; border-radius: 99px; }
+.parse-summary { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; padding: 10px 14px; background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--r-md); font-family: var(--f-mono); font-size: 11px; }
+.parse-summary .ps-item { display: flex; align-items: center; gap: 5px; font-weight: 700; }
+.parse-summary .ps-ok   { color: var(--ok); }
+.parse-summary .ps-warn { color: var(--warn); }
+.parse-summary .ps-err  { color: var(--red); }
+
+/* ── NUEVO: Cortina destacada (Auditor) ── */
+.cortina-badge {
+  display: flex; align-items: center; gap: 10px;
+  background: linear-gradient(135deg, var(--ink) 0%, #2A2D33 100%);
+  border-radius: var(--r-md); padding: 14px 18px; margin-bottom: 14px;
+  box-shadow: var(--shadow-md);
+}
+.cortina-badge .cb-label {
+  font-family: var(--f-mono); font-size: 9px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .18em; color: rgba(255,255,255,.55);
+  white-space: nowrap;
+}
+.cortina-badge .cb-value {
+  font-family: var(--f-display); font-size: 28px; font-weight: 800;
+  color: var(--yellow); letter-spacing: -.02em; line-height: 1;
+}
+.cortina-badge .cb-dot {
+  width: 10px; height: 10px; border-radius: 50%; background: var(--ok);
+  flex-shrink: 0; box-shadow: 0 0 0 3px rgba(10,127,62,.25);
+}
+
+/* ── NUEVO: PDF Viewer Inline (Supervisor) ── */
+.pdf-viewer-wrap {
+  border: 1px solid var(--gray-200); border-radius: var(--r-md);
+  overflow: hidden; margin-top: 10px; background: var(--gray-900);
+  box-shadow: var(--shadow-md);
+}
+.pdf-viewer-toolbar {
+  background: var(--ink); padding: 8px 14px; display: flex; align-items: center; gap: 10px;
+  flex-wrap: wrap;
+}
+.pdf-viewer-toolbar span {
+  font-family: var(--f-mono); font-size: 10px; color: rgba(255,255,255,.65);
+  letter-spacing: .1em; text-transform: uppercase; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.pdf-viewer-toolbar a {
+  padding: 5px 12px; border-radius: var(--r-xs); font-family: var(--f-mono);
+  font-size: 10px; font-weight: 700; text-decoration: none; letter-spacing: .08em;
+  text-transform: uppercase; white-space: nowrap;
+}
+.pdf-viewer-toolbar a.btn-open { background: var(--yellow); color: var(--ink); }
+.pdf-viewer-toolbar a.btn-dl   { background: rgba(255,255,255,.12); color: var(--white); }
+.pdf-viewer-iframe { width: 100%; height: 520px; border: none; display: block; }
+
+/* ── NUEVO: Sección Enriquecidas en Despacho ── */
+.desp-enriquecidas { margin-bottom: 16px; }
+.desp-enriquecidas .de-head {
+  background: var(--gray-700); color: var(--white); border-radius: var(--r-md) var(--r-md) 0 0;
+  padding: 12px 16px; font-family: var(--f-display); font-size: 14px; font-weight: 700;
+  display: flex; align-items: center; gap: 8px;
+}
+.desp-enriquecidas .de-head .de-count {
+  margin-left: auto; background: rgba(255,255,255,.18); padding: 2px 9px;
+  border-radius: 99px; font-size: 11px;
+}
+.desp-enriquecidas .de-body { border: 1px solid var(--gray-200); border-top: none; border-radius: 0 0 var(--r-md) var(--r-md); }
+.desp-enriquecidas .de-item {
+  padding: 12px 16px; border-bottom: 1px solid var(--gray-100);
+  display: flex; align-items: flex-start; gap: 12px;
+}
+.desp-enriquecidas .de-item:last-child { border-bottom: none; }
+.desp-enriquecidas .de-item:hover { background: var(--gray-50); }
+.de-icon {
+  width: 36px; height: 36px; border-radius: var(--r-sm); background: var(--gray-700);
+  display: flex; align-items: center; justify-content: center; font-size: 15px;
+  flex-shrink: 0; color: var(--white); font-family: var(--f-mono); font-weight: 800;
+}
+.de-prime-chip {
+  display: inline-flex; align-items: center; gap: 4px; background: var(--red-tint);
+  color: var(--red); border-radius: 99px; padding: 2px 8px;
+  font-family: var(--f-mono); font-size: 9px; font-weight: 800;
+  letter-spacing: .08em; text-transform: uppercase;
+}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-stack">
+    <div class="splash-logo">
+      <img src="https://cdn.freelogovectors.net/wp-content/uploads/2023/05/dhl-logo-freelogovectors.net_.png" alt="Logo">
+    </div>
+    <div class="splash-title">
+      Administración de Pallets Chep
+      <small> Enterprise Application · Logistica</small>
+    </div>
+    <div class="splash-divider"></div>
+
+    <div class="role-selector" id="role-selector">
+      <h3>Selecciona tu perfil</h3>
+      <div class="role-cards">
+        <div class="role-card" onclick="showLoginFor('auditor')">
+          <div class="role-badge auditor">AUD</div>
+          <div class="role-text">
+            <div class="role-name">Auditor</div>
+            <div class="role-desc">Recibo · Embarque · Pendientes · Herencia</div>
+          </div>
+          <div class="role-arrow">›</div>
+        </div>
+        <div class="role-card" onclick="showLoginFor('mesa')">
+          <div class="role-badge mesa">MC</div>
+          <div class="role-text">
+            <div class="role-name">Analista Mesa de Control</div>
+            <div class="role-desc">Carga · Enriquece · Prime T1/T2 · Asset Type</div>
+          </div>
+          <div class="role-arrow">›</div>
+        </div>
+        <div class="role-card" onclick="showLoginFor('despacho')">
+          <div class="role-badge despacho">DES</div>
+          <div class="role-text">
+            <div class="role-name">Analista Despacho</div>
+            <div class="role-desc">Enriquecidas · Validacion MC vs Factura · Cierre</div>
+          </div>
+          <div class="role-arrow">›</div>
+        </div>
+        <div class="role-card" onclick="showLoginFor('supervisor')">
+          <div class="role-badge supervisor">SUP</div>
+          <div class="role-text">
+            <div class="role-name">Supervisor</div>
+            <div class="role-desc">Resumen diario · Reportes historicos</div>
+          </div>
+          <div class="role-arrow">›</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="login-panel" id="login-panel">
+      <div class="login-back" onclick="showRoleSelector()">← Volver</div>
+      <div class="login-card">
+        <div class="lc-head">
+          <div class="lc-icon" id="lc-icon">AUD</div>
+          <div>
+            <div class="lc-title" id="lc-title">Auditor</div>
+            <div class="lc-sub" id="lc-sub">Acceso al modulo</div>
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div>
+            <label>Cuadrilla <span class="req">*</span></label>
+            <select id="login-squad">
+              <option value="">—</option>
+              <option>A</option><option>B</option><option>C</option><option>D</option>
+            </select>
+          </div>
+          <div>
+            <label>Turno <span class="req">*</span></label>
+            <select id="login-shift">
+              <option value="">—</option>
+              <option>1RO</option><option>2DO</option><option>3RO</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <label>Nombre <span class="req">*</span></label>
+          <div class="combo">
+            <input type="text" id="login-name" class="combo-input"
+                   placeholder="Escribe tu nombre…" autocomplete="off"
+                   oninput="comboFilter('login-name','login-name-list',session.role||currentRole)"
+                   onfocus="comboFilter('login-name','login-name-list',session.role||currentRole)"
+                   onblur="setTimeout(()=>document.getElementById('login-name-list').classList.remove('open'),200)">
+            <div class="combo-list" id="login-name-list"></div>
+          </div>
+          <div style="font-size:10px;color:var(--gray-500);margin-top:4px;font-family:var(--f-mono);letter-spacing:.05em">
+            Si tu nombre no aparece, puedes escribirlo libremente.
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="startSession()">Iniciar Sesion →</button>
+      </div>
+      <div class="dev-credit">Desarrollado por <strong>Itzel Perez</strong> · DHL · Uso interno</div>
+    </div>
+    <div class="dev-credit" id="splash-credit">Desarrollado por <strong>Itzel Perez</strong> · DHL · Uso interno</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <header class="app-header" id="app-header">
+    <div class="app-header-inner">
+      <div class="brand-mark">DHL</div>
+      <div class="brand-text">
+        <h1>Auditoria de Pallets</h1>
+        <div class="brand-meta" id="hdr-date">—</div>
+      </div>
+      <div class="header-user">
+        <div class="u-name" id="hdr-name">—</div>
+        <div class="u-meta" id="hdr-meta">—</div>
+        <div class="u-pill" id="hdr-role">—</div>
+      </div>
+    </div>
+    <nav class="app-nav" id="app-nav"></nav>
+  </header>
+  <main id="app-main"></main>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="modal-detail" onclick="closeModal('modal-detail')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-detail-title">Detalle</div>
+    <div id="modal-detail-body"></div>
+    <div style="height:14px"></div>
+    <button class="btn btn-ghost" onclick="closeModal('modal-detail')">Cerrar</button>
+  </div>
+</div>
+<div class="modal-overlay" id="modal-cancel" onclick="closeModal('modal-cancel')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title" style="color:#C0392B">Cancelar Embarque</div>
+    <div id="modal-cancel-body"></div>
+    <div style="height:14px"></div>
+    <button class="btn btn-ghost" onclick="closeModal('modal-cancel')">Cerrar</button>
+  </div>
+</div>
+<div class="modal-overlay" id="modal-edit-asig" onclick="closeModal('modal-edit-asig')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Editar Asignacion</div>
+    <div id="modal-edit-asig-body"></div>
+    <div style="height:14px"></div>
+    <button class="btn btn-ghost" onclick="closeModal('modal-edit-asig')">Cerrar</button>
+  </div>
+</div>
+<div class="modal-overlay" id="modal-reporte" onclick="closeModal('modal-reporte')">
+  <div class="modal" onclick="event.stopPropagation()" style="max-width:920px">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Reporte Historico por Unidad</div>
+    <div id="modal-reporte-body"></div>
+    <div style="height:14px"></div>
+    <button class="btn btn-ghost" onclick="closeModal('modal-reporte')">Cerrar</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════════════════════════════════════════════════════
+//  CONFIG
+// ════════════════════════════════════════════════════════════════
+const API_URL = 'https://script.google.com/macros/s/AKfycby1lZ1RxVSKgtHKr6WI4bShxOiLA64yx3omASybYaPY31oTV142HGt2aGxDcjyTbjYP/exec';
+
+const ROL_CFG = {
+  auditor:    { icon:'AUD', label:'Auditor',              sub:'Modulo de auditoria operativa',  cls:'auditor',    headerGrad:'var(--grad-header)' },
+  mesa:       { icon:'MC',  label:'Mesa de Control',      sub:'Carga · Enriquecimiento · MC',   cls:'mesa',       headerGrad:'var(--grad-mesa)' },
+  despacho:   { icon:'DES', label:'Analista Despacho',    sub:'Validacion · Cierre',            cls:'despacho',   headerGrad:'var(--grad-despacho)' },
+  supervisor: { icon:'SUP', label:'Supervisor',           sub:'Resumen diario · Reportes historicos', cls:'supervisor', headerGrad:'var(--grad-supervisor)' }
+};
+
+const TIPOS_TARIMA = [
+  'ZP7/PECO estandar HT','ZP6/Merk White Pallet Euro HT','ZP5/GT PALLET','ZP4/CHEP estandar HT',
+  'ZP1/NAFTA Pallet Blanco','PCO/PECO estandar Regular','SLEEP/SLIP SHEEP','SMART estandar regular',
+  'A14/NAFTA WP estandar HT','A11/CHEP estandar Regular','None','Otra'
+];
+
+const PLANTAS_RECIBO = ['B777','C104','C108','OTRO'];
+
+const CATALOGO_LOCAL = {
+  auditor: ['Daniela Ortega Osorio','Cristopher Jonathan Paz Ledezma','Ana Karen Eluvia Gallardo Colin','Delfino Martinez Martinez','Carlos Axel Gonzalez Beltran','Miriam Gutierrez Santiago','Griselda Nolasco Campos','Angelica Lopez Guadalupe','Belen Sarahi Gomez Parra','Brenda Rosalino Polenciano','Paulina Stephanie Cruz Navarro','David Alejandro Torres Tableros'],
+  mesa: ['Pedro Luis Solis Mendoza','Juan Carlos Lopez Flores','Jose Roberto Garcia Acosta','Paulina Stephanie Cruz Navarro','Angel Rafael Viveros Rodriguez','Aleyda Hernandez Bastida'],
+  despacho: ['Ana Lilia Avalos Vazquez','Jose Salvador Segura Cruz','Luis Miguel Morales Alvarado','Aleyda Hernandez Bastida'],
+  supervisor: ['Supervisor 1','Supervisor 2']
+};
+
+// ════════════════════════════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════════════════════════════
+let session = { name:'', squad:'', shift:'', role:'', date:'' };
+let currentRole = '';
+let catalogo = JSON.parse(JSON.stringify(CATALOGO_LOCAL));
+let pendientes = [];
+let mesaFilas = [];
+let photos = { recibo:[], mc:[], embarque:[], asset:[], despacho:[] };
+let assetCapture = null;
+let despachoDoc = null;
+
+function loadState() {
+  try {
+    const s = localStorage.getItem('apv34_session');
+    const p = localStorage.getItem('apv34_pendientes');
+    if (s) session = JSON.parse(s);
+    if (p) pendientes = JSON.parse(p);
+  } catch(e) {}
+}
+function saveState() {
+  try {
+    localStorage.setItem('apv34_session', JSON.stringify(session));
+    localStorage.setItem('apv34_pendientes', JSON.stringify(pendientes));
+  } catch(e) {}
+}
+
+// ════════════════════════════════════════════════════════════════
+//  COMBOBOX
+// ════════════════════════════════════════════════════════════════
+function comboFilter(inputId, listId, rol) {
+  const input = document.getElementById(inputId);
+  const list = document.getElementById(listId);
+  if (!input || !list || !rol) return;
+  const q = (input.value || '').toLowerCase().trim();
+  const opts = (catalogo[rol] || []);
+  const matches = opts.filter(n => n.toLowerCase().includes(q));
+  if (!matches.length && !q) {
+    list.innerHTML = '<div class="combo-empty">Sin nombres en catalogo</div>';
+  } else if (!matches.length) {
+    list.innerHTML = '<div class="combo-empty">Escribir libremente "'+q+'"</div>';
+  } else {
+    list.innerHTML = matches.map(n => `<div class="combo-item" onmousedown="comboPick('${inputId}','${listId}','${n.replace(/'/g,"\\'")}')">${n}</div>`).join('');
+  }
+  list.classList.add('open');
+}
+function comboPick(inputId, listId, value) {
+  document.getElementById(inputId).value = value;
+  document.getElementById(listId).classList.remove('open');
+}
+
+// ════════════════════════════════════════════════════════════════
+//  SPLASH / LOGIN
+// ════════════════════════════════════════════════════════════════
+function showLoginFor(role) {
+  currentRole = role;
+  const cfg = ROL_CFG[role];
+  const lcIcon = document.getElementById('lc-icon');
+  lcIcon.textContent = cfg.icon;
+  lcIcon.className = 'lc-icon ' + cfg.cls;
+  document.getElementById('lc-title').textContent = cfg.label;
+  document.getElementById('lc-sub').textContent = cfg.sub;
+  document.getElementById('login-name').value = '';
+  document.getElementById('role-selector').classList.add('hidden');
+  document.getElementById('splash-credit').classList.add('hidden');
+  document.getElementById('login-panel').classList.add('visible');
+}
+function showRoleSelector() {
+  document.getElementById('role-selector').classList.remove('hidden');
+  document.getElementById('splash-credit').classList.remove('hidden');
+  document.getElementById('login-panel').classList.remove('visible');
+  currentRole = '';
+}
+function startSession() {
+  const name  = document.getElementById('login-name').value.trim();
+  const squad = document.getElementById('login-squad').value;
+  const shift = document.getElementById('login-shift').value;
+  if (!name)         { toast('Ingresa tu nombre','error'); return; }
+  if (!squad||!shift){ toast('Completa cuadrilla y turno','error'); return; }
+  session = { name, squad, shift, role: currentRole, date: new Date().toISOString().slice(0,10) };
+  saveState();
+  hideSplash();
+  updateHeader();
+  buildApp();
+  toast('Bienvenido/a ' + name + ' · ' + ROL_CFG[currentRole].label,'success');
+  setTimeout(() => syncCatalogo(), 200);
+  setTimeout(() => syncPendientes(), 500);
+}
+function hideSplash() {
+  document.getElementById('splash').classList.add('hide');
+  document.getElementById('app').style.display = 'block';
+  setTimeout(() => { document.getElementById('splash').style.display = 'none'; }, 500);
+}
+function updateHeader() {
+  const cfg = ROL_CFG[session.role];
+  document.getElementById('app-header').style.background = cfg.headerGrad;
+  document.getElementById('hdr-name').textContent = session.name;
+  document.getElementById('hdr-meta').textContent = session.shift + ' · Cuad. ' + session.squad;
+  document.getElementById('hdr-role').textContent = cfg.label;
+  const d = session.date
+    ? new Date(session.date+'T12:00:00').toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'short'})
+    : '—';
+  document.getElementById('hdr-date').textContent = d.toUpperCase();
+}
+function logout() {
+  if (!confirm('Cerrar sesion?')) return;
+  localStorage.removeItem('apv34_session');
+  session = {};
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('splash').style.display = 'flex';
+  document.getElementById('splash').classList.remove('hide');
+  showRoleSelector();
+  ['login-name','login-squad','login-shift'].forEach(id => { const e = document.getElementById(id); if (e) e.value = ''; });
+}
+
+// ════════════════════════════════════════════════════════════════
+//  BUILD APP
+// ════════════════════════════════════════════════════════════════
+function buildApp() {
+  const nav  = document.getElementById('app-nav');
+  const main = document.getElementById('app-main');
+  nav.innerHTML = ''; main.innerHTML = '';
+
+  const tabsByRole = {
+    auditor:    [
+      { id:'auditor-recibo',     icon:'', text:'Recibo' },
+      { id:'auditor-embarque',   icon:'', text:'Embarque' },
+      { id:'auditor-pendientes', icon:'', text:'Pendientes', badge:true },
+      { id:'logout',             icon:'', text:'Salir' }
+    ],
+    mesa:       [
+      { id:'mesa-carga',         icon:'', text:'Carga' },
+      { id:'mesa-enriquece',     icon:'', text:'Enriquecer' },
+      { id:'logout',             icon:'', text:'Salir' }
+    ],
+    despacho:   [
+      { id:'despacho-cierre',    icon:'', text:'Cierre' },
+      { id:'logout',             icon:'', text:'Salir' }
+    ],
+    supervisor: [
+      { id:'sup-resumen',        icon:'', text:'Resumen' },
+      { id:'sup-reporte',        icon:'', text:'Reporte' },
+      { id:'logout',             icon:'', text:'Salir' }
+    ]
+  };
+  const tabs = tabsByRole[session.role] || [];
+  tabs.forEach((t,i) => {
+    const d = document.createElement('div');
+    d.className = 'nav-tab' + (i===0?' active':'');
+    d.setAttribute('data-tab', t.id);
+    d.innerHTML = '<span class="nt-icon">'+t.icon+'</span>'+t.text+
+                  (t.badge ? '<span class="nav-badge hidden" id="nav-badge-'+t.id+'">0</span>' : '');
+    d.onclick = () => switchTab(t.id);
+    nav.appendChild(d);
+
+    const c = document.createElement('div');
+    c.id = 'tab-'+t.id;
+    c.className = 'tab-content'+(i===0?' active':'');
+    main.appendChild(c);
+  });
+
+  if (session.role==='auditor') {
+    renderAuditorRecibo(); renderAuditorEmbarque(); renderAuditorPendientes(); renderLogout();
+  } else if (session.role==='mesa') {
+    renderMesaCarga(); renderMesaEnriquece(); renderLogout();
+  } else if (session.role==='despacho') {
+    renderDespachoCierre(); renderLogout();
+  } else if (session.role==='supervisor') {
+    renderSupResumen(); renderSupReporte(); renderLogout();
+  }
+}
+
+function switchTab(id) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  const t = document.getElementById('tab-'+id); if (t) t.classList.add('active');
+  const n = document.querySelector('[data-tab="'+id+'"]'); if (n) n.classList.add('active');
+  if (id==='auditor-pendientes') renderPendientesAuditor();
+  if (id==='mesa-carga')         syncPendientes();
+  if (id==='despacho-cierre')    loadDespachoEnriquecidas();
+  if (id==='sup-resumen')        loadResumenDiario();
+}
+
+function renderLogout() {
+  const tab = document.getElementById('tab-logout');
+  if (!tab) return;
+  tab.innerHTML = `
+    <div class="section-head">
+      <div class="section-icon"></div>
+      <div><div class="section-title">Cerrar Sesion</div><div class="section-desc">Finaliza tu turno o cambia de cuenta</div></div>
+    </div>
+    <div class="card">
+      <p style="font-size:13px;color:var(--gray-700);margin-bottom:16px">Los datos locales se conservan para continuidad.</p>
+      <button class="btn btn-primary" onclick="logout()">Cerrar Sesion</button>
+    </div>`;
+}
+
+// ════════════════════════════════════════════════════════════════
+//  AUDITOR — RECIBO  (v2: + Estatus MC + fix evidencias)
+// ════════════════════════════════════════════════════════════════
+function renderAuditorRecibo() {
+  const tab = document.getElementById('tab-auditor-recibo');
+  if (!tab) return;
+  tab.innerHTML = `
+    <div class="section-head">
+      <div class="section-icon">📦</div>
+      <div><div class="section-title">Recibo de Importados</div><div class="section-desc">Auditoria de descarga · trazabilidad por STO</div></div>
+    </div>
+    <div id="recibo-heritage" class="hidden"></div>
+    <div class="card">
+      <div class="card-title"><span class="ct-dot"></span>Datos del Recibo</div>
+      <input type="hidden" id="r-id">
+      <div class="form-row-2">
+        <div><label>STO <span class="req">*</span></label><input type="text" id="r-sto" placeholder="Num. STO"></div>
+        <div><label>Master Receipt <span class="req">*</span></label><input type="text" id="r-master" placeholder="XXXXXXXXXX"></div>
+      </div>
+      <div class="form-row-2">
+        <div><label>Cortina <span class="req">*</span></label><div class="prefix-group"><span class="prefix-label">DOOR</span><input type="number" id="r-cortina" placeholder="000" min="1"></div></div>
+        <div><label>Planta de Recibo <span class="req">*</span></label><select id="r-planta"><option value="">— Seleccionar —</option>${PLANTAS_RECIBO.map(p=>'<option>'+p+'</option>').join('')}</select></div>
+      </div>
+      <div class="form-row">
+        <label>Tipo de Recibo <span class="req">*</span></label>
+        <div class="toggle-group" id="r-tipo">
+          <div class="toggle-opt" onclick="toggleSelect(this,'r-tipo');onTipoReciboChange()">Paletizado</div>
+          <div class="toggle-opt" onclick="toggleSelect(this,'r-tipo');onTipoReciboChange()">Granel</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Usuario Montacargas <span class="req" id="r-monta-req">*</span><span class="opt" id="r-monta-opt" style="display:none">Opcional</span></label>
+        <div class="prefix-group"><span class="prefix-label">SMO</span><input type="number" id="r-monta" placeholder="000" min="1"></div>
+      </div>
+      <div class="form-row-2">
+        <div><label>Pallets CHEP <span class="req">*</span></label><input type="number" id="r-chep" min="0" placeholder="0"></div>
+        <div><label>Pallets Blancas <span class="req">*</span></label><input type="number" id="r-blancas" min="0" placeholder="0"></div>
+      </div>
+
+      <div class="form-row">
+        <label>Avance (%) <span class="req">*</span></label>
+        <select id="r-avance"><option value="">— Seleccionar —</option><option>Inicio</option><option>25%</option><option>50%</option><option>75%</option><option>Completo</option></select>
+      </div>
+      <div class="form-row">
+        <label>Estado <span class="req">*</span></label>
+        <div class="toggle-group" id="r-estado">
+          <div class="toggle-opt selected ok" onclick="toggleSelect(this,'r-estado','ok')">Finalizado</div>
+          <div class="toggle-opt yellow" onclick="toggleSelect(this,'r-estado','yellow')">Herencia</div>
+        </div>
+      </div>
+      <div class="form-row"><label>Notas</label><textarea id="r-notas" placeholder="Observaciones..."></textarea></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="ct-dot"></span>Evidencia Fotografica <span style="font-size:11px;color:var(--red);margin-left:6px">*</span></div>
+      <div class="photo-zone" id="pz-recibo">
+        <div class="pz-icon">📷</div><p>Tomar foto / Seleccionar imagen</p><span>Evidencia del recibo</span>
+        <input type="file" accept="image/*" capture="environment" multiple onchange="handlePhotos(event,'recibo')">
+      </div>
+      <div class="progress-bar" id="pg-recibo"><div class="inner"></div></div>
+      <div class="photo-previews" id="ph-recibo"></div>
+    </div>
+    <button class="btn btn-primary" onclick="submitRecibo()">Guardar Registro de Recibo →</button>
+  `;
+}
+
+function onTipoReciboChange() {
+  const sel = document.querySelector('#r-tipo .toggle-opt.selected');
+  if (!sel) return;
+  const granel = sel.textContent.trim() === 'Granel';
+  document.getElementById('r-monta-req').style.display = granel ? 'none' : 'inline';
+  document.getElementById('r-monta-opt').style.display = granel ? 'inline-block' : 'none';
+}
+
+async function submitRecibo() {
+  const id      = document.getElementById('r-id').value || '';
+  const sto     = document.getElementById('r-sto').value.trim();
+  const master  = document.getElementById('r-master').value.trim();
+  const cortinaNum = document.getElementById('r-cortina').value.trim();
+  const planta  = document.getElementById('r-planta').value;
+  const tipo    = getToggleValue('r-tipo');
+  const montaNum= document.getElementById('r-monta').value.trim();
+  const chep    = document.getElementById('r-chep').value;
+  const blancas = document.getElementById('r-blancas').value;
+  const avance  = document.getElementById('r-avance').value;
+  const estado  = getToggleValue('r-estado');
+  if (!sto||!master)             return toast('STO y Master Receipt son obligatorios','error');
+  if (!cortinaNum)               return toast('Cortina obligatoria','error');
+  if (!planta)                   return toast('Selecciona planta','error');
+  if (!tipo)                     return toast('Selecciona tipo de recibo','error');
+  if (tipo!=='Granel'&&!montaNum)return toast('Montacargas obligatorio en paletizado','error');
+  if (chep===''||blancas==='')   return toast('Captura cantidades de pallets','error');
+  if (!avance)                   return toast('Selecciona avance','error');
+  if (!estado)                   return toast('Selecciona estado','error');
+  if (!photos.recibo.length)     return toast('Evidencia fotografica obligatoria','error');
+
+  const cortina = 'DOOR'+cortinaNum;
+  const data = {
+    id, sto, master_receipt: master, cortina, planta_recibo: planta,
+    tipo_recibo: tipo, usuario_monta: montaNum ? 'SMO'+montaNum : '',
+    pallets_chep: Number(chep), pallets_blancas: Number(blancas),
+    avance, estado_auditor: estado.includes('Finalizado') ? 'Finalizado' : 'Herencia',
+    notas: document.getElementById('r-notas').value.trim(),
+    auditor: session.name, turno: session.shift, cuadrilla: session.squad
+  };
+  toast('Guardando recibo...');
+  const res = await apiPost('auditor_save_recibo', { data });
+  if (!res||!res.ok) return toast('Error al guardar','error');
+  const newId = res.data.id;
+  // FIX: pasar modulo='recibo' explícitamente para que backend escriba en columna correcta
+  const reciboId = (res.data&&res.data.id) ? res.data.id : newId;
+  if (photos.recibo.length) {
+    toast('Subiendo evidencias ('+photos.recibo.length+')...');
+    try { await uploadEvidencesBatch(reciboId,'recibo','recibo',photos.recibo); } catch(e) { toast('Error al subir evidencias','warn'); }
+  }
+  toast('Recibo '+(res.data.estado==='HERENCIA'?'guardado como herencia':'finalizado'),'success');
+  resetReciboForm();
+  syncPendientes();
+}
+
+function resetReciboForm() {
+  ['r-id','r-sto','r-master','r-cortina','r-monta','r-chep','r-blancas','r-notas'].forEach(id => { const e = document.getElementById(id); if (e) e.value = ''; });
+  document.getElementById('r-planta').value = '';
+  document.getElementById('r-avance').value = '';
+  document.querySelectorAll('#r-tipo .toggle-opt').forEach(o => o.classList.remove('selected','ok','yellow'));
+  document.querySelectorAll('#r-estado .toggle-opt').forEach((o,i) => {
+    o.classList.remove('selected','ok','yellow');
+    if (i===0) o.classList.add('selected','ok');
+    if (i===1) o.classList.add('yellow');
+  });
+  document.getElementById('r-monta-req').style.display = 'inline';
+  document.getElementById('r-monta-opt').style.display = 'none';
+  photos.recibo = []; renderPhotos('recibo');
+  document.getElementById('recibo-heritage').classList.add('hidden');
+}
+
+// ════════════════════════════════════════════════════════════════
+//  AUDITOR — EMBARQUE
+// ════════════════════════════════════════════════════════════════
+function renderAuditorEmbarque() {
+  const tab = document.getElementById('tab-auditor-embarque');
+  if (!tab) return;
+  tab.innerHTML = `
+    <div class="section-head">
+      <div class="section-icon">🚛</div>
+      <div><div class="section-title">Embarque de Pallets</div><div class="section-desc">Solo embarques con cortina asignada · Mismo ID a lo largo del flujo</div></div>
+    </div>
+    <div id="embarque-heritage" class="hidden"></div>
+    <div class="card" id="embarque-asig-info" style="display:none;background:var(--yellow-tint);border-color:var(--yellow-dark)">
+      <div class="card-title"><span class="ct-dot"></span>Datos Pre-cargados por Mesa</div>
+      <div class="detail-grid" id="embarque-asig-detalle"></div>
+    </div>
+    <div class="empty" id="embarque-empty">
+      <div class="em-icon">📋</div>
+      <div class="em-title">Sin asignacion seleccionada</div>
+      <div class="em-sub">Ve a <strong>Pendientes</strong> y elige un embarque con cortina para iniciar.</div>
+    </div>
+    <div id="embarque-form" style="display:none">
+      <div class="card">
+        <div class="card-title"><span class="ct-dot"></span>Datos del Auditor</div>
+        <input type="hidden" id="e-id">
+        <div class="form-row">
+          <label>Tipo de Auditoria <span class="req">*</span></label>
+          <div class="toggle-group" id="e-tipo-aud">
+            <div class="toggle-opt" onclick="toggleSelect(this,'e-tipo-aud')">Completa</div>
+            <div class="toggle-opt" onclick="toggleSelect(this,'e-tipo-aud')">Parcial</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <label>Usuario Montacargas <span style="font-size:10px;color:var(--gray-500);font-family:var(--f-mono)">opcional si granel</span></label>
+          <div class="prefix-group"><span class="prefix-label">SMO</span><input type="number" id="e-monta" placeholder="000" min="1"></div>
+        </div>
+        <div class="form-row-2">
+          <div><label>Pallets CHEP <span class="req">*</span></label><input type="number" id="e-chep" min="0" placeholder="0"></div>
+          <div><label>Pallets Blancas <span class="req">*</span></label><input type="number" id="e-blancas" min="0" placeholder="0"></div>
+        </div>
+        <div class="form-row">
+          <label>Etiqueta Consolidada</label>
+          <div class="toggle-group" id="e-etiqueta">
+            <div class="toggle-opt" onclick="toggleSelect(this,'e-etiqueta')">SI</div>
+            <div class="toggle-opt" onclick="toggleSelect(this,'e-etiqueta')">NO</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <label>Estatus MC <span class="req">*</span></label>
+          <div class="toggle-group" id="e-status-mc">
+            <div class="toggle-opt" onclick="toggleSelect(this,'e-status-mc','ok');onStatusMCChange()">Correcto</div>
+            <div class="toggle-opt" onclick="toggleSelect(this,'e-status-mc');onStatusMCChange()">Incorrecto</div>
+          </div>
+        </div>
+        <div class="form-row hidden" id="e-motivo-wrap">
+          <label>Motivo de Error <span class="req">*</span></label>
+          <select id="e-motivo">
+            <option value="">— Seleccionar —</option>
+            <option>Conteo incorrecto</option><option>Tarima danada</option><option>Etiqueta faltante</option>
+            <option>Producto incorrecto</option><option>Documentacion faltante</option>
+            <option>Omision de etiqueta</option><option>Sin informacion</option>
+            <option>Etiqueta duplicada</option><option>Otro</option>
+          </select>
+        </div>
+        <div class="form-row-2">
+          <div>
+            <label>Avance (%) <span class="req">*</span></label>
+            <select id="e-avance"><option value="">—</option><option>Inicio</option><option>25%</option><option>50%</option><option>75%</option><option>Completo</option></select>
+          </div>
+          <div>
+            <label>Estado <span class="req">*</span></label>
+            <div class="toggle-group" id="e-estado">
+              <div class="toggle-opt ok" onclick="toggleSelect(this,'e-estado','ok')">Finalizado</div>
+              <div class="toggle-opt yellow" onclick="toggleSelect(this,'e-estado','yellow')">Herencia</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="ct-dot"></span>Evidencia <span style="font-size:11px;color:var(--red);margin-left:6px">*</span></div>
+        <div class="photo-zone" id="pz-embarque">
+          <div class="pz-icon">📷</div><p>Tomar foto del embarque</p><span>Foto general del embarque</span>
+          <input type="file" accept="image/*" capture="environment" multiple onchange="handlePhotos(event,'embarque')">
+        </div>
+        <div id="embarque-photo-hint" style="font-size:11px;color:var(--ink-soft);margin-top:4px;padding:0 4px"></div>
+        <div class="progress-bar" id="pg-embarque"><div class="inner"></div></div>
+        <div class="photo-previews" id="ph-embarque"></div>
+      </div>
+      <button class="btn btn-primary" onclick="submitEmbarque()">Guardar Auditoria →</button>
+      <div style="height:8px"></div>
+      <button class="btn btn-ghost" onclick="cancelEmbarqueForm()">Cancelar</button>
+    </div>
+  `;
+}
+
+function onStatusMCChange() {
+  const sel = document.querySelector('#e-status-mc .toggle-opt.selected');
+  if (!sel) return;
+  document.getElementById('e-motivo-wrap').classList.toggle('hidden', !sel.textContent.includes('Incorrecto'));
+}
+
+async function submitEmbarque() {
+  const id      = document.getElementById('e-id').value;
+  if (!id) return toast('Debes iniciar desde un pendiente','error');
+  const tipoAud = getToggleValue('e-tipo-aud');
+  const monta   = document.getElementById('e-monta').value.trim();
+  const chep    = document.getElementById('e-chep').value;
+  const blancas = document.getElementById('e-blancas').value;
+  const etiq    = getToggleValue('e-etiqueta');
+  const statusMC= getToggleValue('e-status-mc');
+  const motivo  = document.getElementById('e-motivo').value;
+  const avance  = document.getElementById('e-avance').value;
+  const estado  = getToggleValue('e-estado');
+  if (!tipoAud)  return toast('Selecciona tipo de auditoria','error');
+  if (chep===''||blancas==='') return toast('Captura pallets','error');
+  if (!statusMC) return toast('Indica el Estatus MC','error');
+  if (statusMC.includes('Incorrecto')&&!motivo) return toast('Motivo de error MC obligatorio','error');
+  if (!avance)   return toast('Selecciona avance','error');
+  if (!estado)   return toast('Selecciona estado','error');
+  const esHerencia = estado.includes('Herencia');
+  if (esHerencia && photos.embarque.length < 2) return toast('Herencia requiere mínimo 2 fotos de evidencia','error');
+  if (!esHerencia && !photos.embarque.length) return toast('Evidencia obligatoria','error');
+  const data = {
+    id,
+    tipo_auditoria: tipoAud.includes('Completa')?'Completa':'Parcial',
+    usuario_monta: monta?'SMO'+monta:'',
+    pallets_chep: Number(chep), pallets_blancas: Number(blancas),
+    etiqueta_consolidada: etiq.includes('SI')?'SI':(etiq.includes('NO')?'NO':''),
+    status_mc: statusMC.includes('Correcto')&&!statusMC.includes('Incorrecto')?'Correcto':'Incorrecto',
+    motivo_error_mc: motivo,
+    avance,
+    estado_auditor: esHerencia?'Herencia':'Finalizado',
+    auditor: session.name, turno: session.shift, cuadrilla: session.squad
+  };
+  toast('Guardando auditoria...');
+  const res = await apiPost('auditor_save_embarque', { data });
+  if (!res||!res.ok) return toast('Error: '+(res?.error||'desconocido'),'error');
+  const canonId = (res.data&&res.data.id) ? res.data.id : id;
+  // Snapshot photos before any UI reset
+  const photosToUpload = (photos.embarque||[]).slice();
+  if (photosToUpload.length) {
+    // Disable submit button to prevent double-submit during upload
+    const btn = document.querySelector('#tab-auditor-embarque .btn-primary');
+    if (btn) { btn.disabled = true; btn.textContent = 'Subiendo evidencias...'; }
+    let uploadFailed = false;
+    try {
+      await uploadEvidencesBatch(canonId, 'embarque', 'embarque', photosToUpload);
+    } catch(e) {
+      uploadFailed = true;
+      toast('Error al subir evidencias — registro guardado, reintenta la foto', 'warn');
+    }
+    if (btn) { btn.disabled = false; btn.textContent = 'Guardar Auditoria →'; }
+    if (uploadFailed && esHerencia) {
+      // For herencia, evidence is critical — do not proceed silently
+      return toast('No se pudo subir evidencia requerida para herencia. Verifica conexión.', 'error');
+    }
+  }
+  toast('Auditoria guardada · Auditores: '+res.data.conteo_auditores,'success');
+  cancelEmbarqueForm();
+  syncPendientes();
+}
+
+function cancelEmbarqueForm() {
+  document.getElementById('embarque-form').style.display = 'none';
+  document.getElementById('embarque-empty').style.display = 'block';
+  document.getElementById('embarque-asig-info').style.display = 'none';
+  document.getElementById('embarque-heritage').classList.add('hidden');
+  ['e-id','e-monta','e-chep','e-blancas','e-motivo'].forEach(id => { const e = document.getElementById(id); if(e) e.value = ''; });
+  document.getElementById('e-avance').value = '';
+  document.querySelectorAll('#tab-auditor-embarque .toggle-opt').forEach(o => o.classList.remove('selected','ok','yellow'));
+  document.querySelectorAll('#e-estado .toggle-opt')[0]?.classList.add('ok');
+  document.querySelectorAll('#e-estado .toggle-opt')[1]?.classList.add('yellow');
+  photos.embarque = []; renderPhotos('embarque');
+}
+
+// FIX: Cortina ahora muestra badge prominente antes del formulario
+function iniciarEmbarqueDesdePendiente(id) {
+  const p = pendientes.find(x => x.id === id);
+  if (!p) return toast('Pendiente no encontrado','error');
+  const cortina = p.cortina||(p.datos&&p.datos.cortina)||'';
+  if (!cortina) return toast('Este embarque no tiene cortina. Solicita a Mesa que la agregue.','warn');
+  switchTab('auditor-embarque');
+  document.getElementById('embarque-empty').style.display = 'none';
+  document.getElementById('embarque-form').style.display = 'block';
+  document.getElementById('e-id').value = id;
+
+  // Construir detalle de asignacion con cortina prominente
+  document.getElementById('embarque-asig-info').style.display = 'block';
+  const unidadVal = p.unidad_envio||p.datos?.unidad_envio||'—';
+  const clienteVal = p.cliente||p.datos?.cliente||'—';
+  const tipoVal = p.tipo_embarque||p.datos?.tipo_embarque||'—';
+
+  document.getElementById('embarque-asig-detalle').innerHTML = `
+    <div class="dt-item dt-brand"><span class="dt-label">Unidad de envio</span><span class="dt-value">${unidadVal}</span></div>
+    <div class="dt-item dt-brand"><span class="dt-label">Cliente</span><span class="dt-value">${clienteVal}</span></div>
+    <div class="dt-item"><span class="dt-label">Tipo de embarque</span><span class="dt-value">${tipoVal}</span></div>
+    <div class="dt-item" style="border-left-color:var(--yellow);background:var(--yellow-tint);grid-column:1/-1">
+      <span class="dt-label" style="color:var(--warn)">Cortina Asignada</span>
+      <span class="dt-value" style="font-size:22px;font-family:var(--f-display);color:var(--ink);letter-spacing:-.02em">${cortina}</span>
+    </div>
+  `;
+
+  if (p.estado==='HERENCIA'&&p.datos) {
+    const d = p.datos;
+    if (d.usuario_monta) document.getElementById('e-monta').value = d.usuario_monta.replace(/^SMO/i,'');
+    if (d.pallets_chep!=null) document.getElementById('e-chep').value = d.pallets_chep;
+    if (d.pallets_blancas!=null) document.getElementById('e-blancas').value = d.pallets_blancas;
+    if (d.avance) document.getElementById('e-avance').value = d.avance;
+    document.getElementById('embarque-heritage').classList.remove('hidden');
+    document.getElementById('embarque-heritage').innerHTML = `
+      <div class="heritage-banner">
+        <div class="hb-head"><span style="font-size:20px">⟲</span><div class="hb-title">Continuando Herencia</div></div>
+        <div style="font-size:12px;color:var(--warn);line-height:1.6">
+          <strong>Ultimo auditor:</strong> ${p.ultimo_auditor||'—'} · Turno ${p.ultimo_turno||'—'}<br>
+          Los campos previos quedaron prellenados. Revisa, completa lo faltante y guarda para cerrar la herencia.
+        </div>
+      </div>
+    `;
+  }
+  closeModal('modal-detail');
+  toast('Embarque cargado · Completa la auditoria','success');
+}
+
+// ════════════════════════════════════════════════════════════════
+//  AUDITOR — PENDIENTES  (con cortina badge prominente)
+// ════════════════════════════════════════════════════════════════
+function renderAuditorPendientes() {
+  const tab = document.getElementById('tab-auditor-pendientes');
+  if (!tab) return;
+  tab.innerHTML = `
+    <div class="section-head">
+      <div class="section-icon">⏳</div>
+      <div><div class="section-title">Pendientes y Herencias</div><div class="section-desc">Herencias del turno anterior · Asignaciones de Mesa</div></div>
+    </div>
+    <div class="sync-banner">
+      <span class="sb-icon"></span>
+      <div style="flex:1"><div style="font-weight:700;color:var(--ink)">Sincronizacion en la nube</div><div style="color:var(--gray-500);margin-top:1px">Cualquier auditor puede tomar estos registros</div></div>
+      <button onclick="syncPendientes()">Actualizar</button>
+    </div>
+    <div id="pendientes-container">
+      <div class="empty"><div class="em-icon"></div><div class="em-title">Sin pendientes</div><div class="em-sub">Sincroniza para ver los embarques del dia</div></div>
+    </div>
+  `;
+  renderPendientesAuditor();
+}
+
+function renderPendientesAuditor() {
+  const container = document.getElementById('pendientes-container');
+  if (!container) return;
+  updateNavBadge();
+  if (!pendientes.length) {
+    container.innerHTML = '<div class="empty"><div class="em-icon">✅</div><div class="em-title">Sin pendientes</div><div class="em-sub">Todos los registros del dia estan cerrados</div></div>';
+    return;
+  }
+  const items = pendientes.filter(p => p._estado==='NUEVO'||p._estado==='HERENCIA'||p.estado==='NUEVO'||p.estado==='HERENCIA');
+  if (!items.length) {
+    container.innerHTML = '<div class="empty"><div class="em-icon">✅</div><div class="em-title">Sin pendientes para tomar</div></div>';
+    return;
+  }
+  const nuevos    = items.filter(p => (p._estado||p.estado)==='NUEVO');
+  const herencias = items.filter(p => (p._estado||p.estado)==='HERENCIA');
+  let html = '';
+  if (herencias.length) {
+    html += '<div class="pendiente-panel"><div class="pp-head brand">Herencias — Turno Anterior<span class="pp-count">'+herencias.length+'</span></div>';
+    herencias.forEach(p => html += pendienteItemHTML(p,'herencia'));
+    html += '</div>';
+  }
+  if (nuevos.length) {
+    html += '<div class="pendiente-panel"><div class="pp-head dark">Asignaciones de Mesa<span class="pp-count">'+nuevos.length+'</span></div>';
+    nuevos.forEach(p => html += pendienteItemHTML(p,'nuevo'));
+    html += '</div>';
+  }
+  container.innerHTML = html;
+}
+
+// FIX: cortina se muestra con mayor prominencia en la lista de pendientes
+function pendienteItemHTML(p, tipo) {
+  const unidad   = p.unidad_envio||p.datos?.unidad_envio||'—';
+  const cliente  = p.cliente||p.datos?.cliente||'—';
+  const cortina  = p.cortina||p.datos?.cortina||'';
+  const tipoEmb  = p.tipo_embarque||p.datos?.tipo_embarque||'—';
+  const sinCortina = !cortina;
+  const esRecibo = !!(p.sto||p.datos?.sto||p.datos?.master_receipt||p.master_receipt);
+  const cortinaBadge = sinCortina
+    ? '<span class="status cancelado">Sin cortina</span>'
+    : `<span style="display:inline-flex;align-items:center;gap:5px;background:var(--ink);color:var(--yellow);padding:3px 10px;border-radius:6px;font-family:var(--f-mono);font-weight:800;font-size:12px;letter-spacing:.04em">${cortina}</span>`;
+  return `
+    <div class="pp-item">
+      <div class="pp-icon">${tipo==='nuevo'?'🆕':'⟲'}</div>
+      <div class="pp-body">
+        <div class="pp-title">${unidad} · ${cliente}</div>
+        <div class="pp-meta" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px">
+          <span style="color:var(--gray-500);font-size:11px">${tipoEmb}</span>
+          ${cortinaBadge}
+          ${tipo==='herencia'?'<span style="font-size:10px;color:var(--gray-500)">Ultimo: '+(p.ultimo_auditor||'—')+' · '+(p.ultimo_turno||'—')+'</span>':''}
+        </div>
+        ${p.nota_mesa?'<div class="note info" style="margin-top:8px;font-size:11px">'+p.nota_mesa+'</div>':''}
+        <div class="pp-actions">
+          <button class="pp-btn ${sinCortina?'ghost':'primary'}" ${sinCortina?'disabled':''} onclick="${esRecibo?'iniciarReciboDesdePendiente':'iniciarEmbarqueDesdePendiente'}('${p.id}')">
+            ${sinCortina?'Sin cortina':(tipo==='nuevo'?'Iniciar':'Continuar')}
+          </button>
+          <button class="pp-btn ghost" onclick="verDetallePendiente('${p.id}')">Detalle</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function verDetallePendiente(id) {
+  const p = pendientes.find(x => x.id === id);
+  if (!p) return;
+  const cortina = p.cortina||p.datos?.cortina||'SIN CORTINA';
+  const fields = [
+    ['ID', p.id],['Unidad de Envio', p.unidad_envio||p.datos?.unidad_envio||'—'],
+    ['Cliente', p.cliente||p.datos?.cliente||'—'],['Tipo de Embarque', p.tipo_embarque||p.datos?.tipo_embarque||'—'],
+    ['Cortina', cortina],
+    ['Mesa origen', p.mesa_origen||'—'],['Estado', p._estado||p.estado||'—'],['Fecha creacion', p.fecha_creacion||'—']
+  ];
+  let body = '';
+  // Cortina destacada al inicio
+  if (cortina !== 'SIN CORTINA') {
+    body += `<div class="cortina-badge"><div><div class="cb-label">Cortina Asignada</div><div class="cb-value">${cortina}</div></div><div class="cb-dot"></div></div>`;
+  }
+  body += '<div class="detail-grid">';
+  fields.forEach(f => body += '<div class="dt-item"><span class="dt-label">'+f[0]+'</span><span class="dt-value">'+f[1]+'</span></div>');
+  body += '</div>';
+  if (p.nota_mesa) body += '<div class="note info" style="margin-top:12px"><strong>Nota de mesa:</strong> '+p.nota_mesa+'</div>';
+  body += '<div style="height:14px"></div>';
+  const esRecibo = !!(p.sto||p.datos?.sto||p.datos?.master_receipt||p.master_receipt);
+  if (esRecibo) {
+    body += '<button class="btn btn-primary" onclick="iniciarReciboDesdePendiente(\''+p.id+'\')">Continuar este recibo →</button>';
+  } else {
+    body += '<button class="btn btn-primary" onclick="iniciarEmbarqueDesdePendiente(\''+p.id+'\')">Tomar este embarque →</button>';
+  }
+  document.getElementById('modal-detail-title').textContent = 'Detalle de Pendiente';
+  document.getElementById('modal-detail-body').innerHTML = body;
+  document.getElementById('modal-detail').classList.add('open');
+}
+
+
+function iniciarReciboDesdePendiente(id) {
+  const p = pendientes.find(x => x.id === id);
+  if (!p) return toast('Pendiente no encontrado','error');
+  const cortina = p.cortina||(p.datos&&p.datos.cortina)||'';
+  if (!cortina) return toast('Este recibo no tiene cortina. Solicita a Mesa que la agregue.','warn');
+  // Navegar al tab de Recibo
+  switchTab('auditor-recibo');
+  // Pre-cargar campos del recibo desde el pendiente
+  document.getElementById('r-id').value = id;
+  document.getElementById('r-cortina').value = cortina.replace(/^DOOR/i,'');
+  // Pre-fill STO y master si vienen en p.datos
+  const sto = p.sto||p.datos?.sto||'';
+  const master = p.master_receipt||p.datos?.master_receipt||'';
+  const planta = p.planta_recibo||p.datos?.planta_recibo||'';
+  const notas  = p.notas||p.datos?.notas||'';
+  if (sto)    document.getElementById('r-sto').value = sto;
+  if (master) document.getElementById('r-master').value = master;
+  if (planta) document.getElementById('r-planta').value = planta;
+  if (notas)  document.getElementById('r-notas').value = notas;
+  // Mostrar banner de continuación
+  const herenciaBanner = document.getElementById('recibo-heritage');
+  if (herenciaBanner) {
+    herenciaBanner.classList.remove('hidden');
+    herenciaBanner.innerHTML = `
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--yellow-tint);border:1px solid var(--yellow-dark);border-radius:var(--r-md);margin-bottom:14px">
+        <span style="font-size:18px">⟲</span>
+        <div>
+          <div style="font-family:var(--f-mono);font-size:10px;font-weight:700;color:var(--warn);text-transform:uppercase;letter-spacing:.1em">Continuando herencia</div>
+          <div style="font-size:12px;color:var(--ink-soft);margin-top:2px">ID: <strong>${id}</strong> · Cortina: <strong>${cortina}</strong></div>
+        </div>
+      </div>`;
+  }
+  document.getElementById('modal-detail').classList.remove('open');
+  toast('Recibo pre-cargado desde herencia', 'ok');
+}
+
+function updateNavBadge() {
+  const badge = document.getElementById('nav-badge-auditor-pendientes');
+  if (!badge) return;
+  const count = pendientes.filter(p => { const s=p._estado||p.estado; return s==='NUEVO'||s==='HERENCIA'; }).length;
+  badge.textContent = count;
+  badge.classList.toggle('hidden', count===0);
+}
+
+// ════════════════════════════════════════════════════════════════
+//  MESA — CARGA
+// ════════════════════════════════════════════════════════════════
+function renderMesaCarga() {
+  const tab = document.getElementById('tab-mesa-carga');
+  if (!tab) return;
+  tab.innerHTML = `
+    <div class="section-head">
+      <div class="section-icon">📋</div>
+      <div>
+        <div class="section-title">Carga de Embarques del Dia</div>
+        <div class="section-desc">Origen del flujo · Asignaciones · Editables hasta el cierre</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title ct-mesa"><span class="ct-dot"></span>Pegar desde Excel</div>
+      <div class="note info">
+        Formato de columnas (separadas por <strong>Tab</strong>):<br>
+        <strong>Tipo de Embarque&nbsp;&nbsp;Unidad de Envio&nbsp;&nbsp;Cliente&nbsp;&nbsp;Fecha y Hora UE (DD/MM/YYYY HH:MM)&nbsp;&nbsp;Cortina (opcional)</strong><br>
+        <span style="color:var(--gray-500)">Ejemplo:</span>
+        <code style="font-family:var(--f-mono);font-size:10px;display:block;margin-top:4px;background:var(--gray-100);padding:6px 8px;border-radius:4px;letter-spacing:0">
+          Exportacion&nbsp;&nbsp;UE-45821&nbsp;&nbsp;WALMART&nbsp;&nbsp;05/06/2026 14:30&nbsp;&nbsp;DOOR5<br>
+        </code>
+      </div>
+      <div class="excel-zone">
+        <textarea id="mesa-paste" rows="7" placeholder="" oninput="mesaParsePaste()"></textarea>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title ct-mesa"><span class="ct-dot"></span>Agregar Fila Manual</div>
+      <div class="form-row-3">
+        <div>
+          <label>Tipo de Embarque <span class="req">*</span></label>
+          <select id="mm-tipo">
+            <option value="">—</option>
+            <option>Exportacion</option><option>Local</option>
+            <option>Paletizado</option><option>Granel</option><option>Especial</option>
+          </select>
+        </div>
+        <div>
+          <label>Unidad de Envio <span class="req">*</span></label>
+          <input type="text" id="mm-unidad" placeholder="UE-00000">
+        </div>
+        <div>
+          <label>Cliente <span class="req">*</span></label>
+          <input type="text" id="mm-cliente" placeholder="WALMART">
+        </div>
+      </div>
+      <div class="form-row-2">
+        <div style="grid-column:1/-1">
+          <label>Fecha y Hora UE de Envio <span class="req">*</span></label>
+          <input type="text" id="mm-ue-datetime" placeholder="" maxlength="16" style="font-family:var(--f-mono)">
+          <div style="font-size:10px;color:var(--gray-500);margin-top:4px;font-family:var(--f-mono);letter-spacing:.05em">Formato: DD/MM/YYYY HH:MM</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Cortina <span class="opt">Opcional</span></label>
+        <div class="prefix-group" style="max-width:180px">
+          <span class="prefix-label">DOOR</span>
+          <input type="number" id="mm-cortina" placeholder="000" min="1">
+        </div>
+      </div>
+      <button class="btn btn-dark btn-sm" onclick="mesaAddManual()">+ Agregar Fila</button>
+    </div>
+    <div class="card hidden" id="mesa-preview-card">
+      <div class="card-title ct-mesa"><span class="ct-dot"></span>Previsualizacion (sin enviar) · <span id="mesa-preview-count">0</span> filas</div>
+      <div id="mesa-parse-summary"></div>
+      <div id="mesa-preview-table" style="overflow-x:auto"></div>
+      <div style="height:12px"></div>
+      <div class="note warn" id="mesa-preview-errors" style="display:none"></div>
+      <div class="form-row">
+        <label>Nota para auditores (opcional)</label>
+        <textarea id="mesa-nota" placeholder="Instrucciones adicionales..."></textarea>
+      </div>
+      <button class="btn btn-primary" id="mesa-btn-enviar" onclick="mesaEnviar()">Enviar a Bandeja de Asignaciones</button>
+      <div style="height:8px"></div>
+      <button class="btn btn-ghost" onclick="mesaLimpiar()">Limpiar previsualizacion</button>
+    </div>
+    <div class="accent-line"></div>
+    <div class="section-head" style="margin-top:6px">
+      <div class="section-icon">🗂</div>
+      <div>
+        <div class="section-title">Bandeja de Asignaciones del Dia</div>
+        <div class="section-desc">Persisten hasta el cierre o cancelacion · Editables en cualquier momento</div>
+      </div>
+    </div>
+    <div class="sync-banner">
+      <span class="sb-icon"></span>
+      <div style="flex:1"><div style="font-weight:700;color:var(--ink)">Asignaciones activas</div><div style="color:var(--gray-500);margin-top:1px">Solo se eliminan al cerrar (despacho) o cancelar</div></div>
+      <button onclick="syncPendientes()">Actualizar</button>
+    </div>
+    <div id="mesa-asignaciones-container">
+      <div class="empty"><div class="em-icon">⏳</div><div class="em-title">Cargando asignaciones...</div></div>
+    </div>
+  `;
+  setTimeout(() => { syncPendientes(); }, 100);
+}
+
+function parseUEDatetime(raw) {
+  if (!raw || !raw.toString().trim()) {
+    return { valid: false, normalized_fecha: '', normalized_hora: '', display: '', hint: 'Vacio' };
+  }
+  const s = raw.toString().trim();
+  const mCombined = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})\s+(\d{1,2}):(\d{2})(?::\d{2})?$/);
+  if (mCombined) {
+    const d=Number(mCombined[1]),m=Number(mCombined[2]),y=Number(mCombined[3]);
+    const h=Number(mCombined[4]),min=Number(mCombined[5]);
+    if (d<1||d>31||m<1||m>12||y<2000||y>2099)
+      return { valid:false, normalized_fecha:'', normalized_hora:'', display:s, hint:'Fecha invalida' };
+    if (h<0||h>23||min<0||min>59)
+      return { valid:false, normalized_fecha:'', normalized_hora:'', display:s, hint:'Hora fuera de rango' };
+    const nf = y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const nh = String(h).padStart(2,'0')+':'+String(min).padStart(2,'0');
+    const dp = String(d).padStart(2,'0')+'/'+String(m).padStart(2,'0')+'/'+y+' '+nh;
+    return { valid:true, normalized_fecha:nf, normalized_hora:nh, display:dp, hint:'' };
+  }
+  const mISO = s.match(/^(\d{4})-(\d{2})-(\d{2})\s+(\d{1,2}):(\d{2})(?::\d{2})?$/);
+  if (mISO) {
+    const y=Number(mISO[1]),m=Number(mISO[2]),d=Number(mISO[3]);
+    const h=Number(mISO[4]),min=Number(mISO[5]);
+    if (m<1||m>12||d<1||d>31||h<0||h>23||min<0||min>59)
+      return { valid:false, normalized_fecha:'', normalized_hora:'', display:s, hint:'Valor fuera de rango' };
+    const nf = y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const nh = String(h).padStart(2,'0')+':'+String(min).padStart(2,'0');
+    const dp = String(d).padStart(2,'0')+'/'+String(m).padStart(2,'0')+'/'+y+' '+nh;
+    return { valid:true, normalized_fecha:nf, normalized_hora:nh, display:dp, hint:'Convertido de ISO' };
+  }
+  const mDateOnly = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+  if (mDateOnly) {
+    const d=Number(mDateOnly[1]),m=Number(mDateOnly[2]),y=Number(mDateOnly[3]);
+    if (d>=1&&d<=31&&m>=1&&m<=12&&y>=2000&&y<=2099) {
+      const nf = y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+      const dp = String(d).padStart(2,'0')+'/'+String(m).padStart(2,'0')+'/'+y;
+      return { valid:true, normalized_fecha:nf, normalized_hora:'', display:dp, hint:'Sin hora — agregar HH:MM' };
+    }
+  }
+  return { valid:false, normalized_fecha:'', normalized_hora:'', display:s, hint:'Formato no reconocido (usar DD/MM/YYYY HH:MM)' };
+}
+
+function mesaParsePaste() {
+  const raw = (document.getElementById('mesa-paste').value||'').trim();
+  if (!raw) { mesaFilas = []; mesaRenderPreview(); return; }
+  const lines = raw.split(/\r?\n/).filter(l => l.trim());
+  mesaFilas = lines.map((line, idx) => {
+    const sep = line.includes('\t') ? '\t' : ';';
+    const parts = line.split(sep).map(s => s.trim());
+    const tipo    = (parts[0]||'').toUpperCase();
+    const unidad  = (parts[1]||'').toUpperCase();
+    const cliente = (parts[2]||'').toUpperCase();
+    const col3 = (parts[3]||'').trim();
+    const col4 = (parts[4]||'').trim();
+    const col5 = (parts[5]||'').trim();
+    const col3HasTime = /\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4}\s+\d{1,2}:\d{2}/.test(col3)||/\d{4}-\d{2}-\d{2}\s+\d{1,2}:\d{2}/.test(col3);
+    let datetimeRaw, cortinaRaw;
+    if (col3HasTime) { datetimeRaw = col3; cortinaRaw = col4.toUpperCase(); }
+    else { datetimeRaw = col3 && col4 ? col3 + ' ' + col4 : col3; cortinaRaw = col5.toUpperCase(); }
+    const dtV = parseUEDatetime(datetimeRaw);
+    let cortina = '';
+    if (cortinaRaw) {
+      if (/^DOOR\d+$/.test(cortinaRaw)) cortina = cortinaRaw;
+      else if (/^\d+$/.test(cortinaRaw)) cortina = 'DOOR' + cortinaRaw;
+      else cortina = cortinaRaw;
+    }
+    const errores = [];
+    if (!tipo) errores.push('Tipo de embarque requerido');
+    if (!unidad) errores.push('Unidad de envio requerida');
+    if (!cliente) errores.push('Cliente requerido');
+    if (!col3) errores.push('Fecha y Hora UE requeridas');
+    else if (!dtV.valid) errores.push('Fecha/Hora: ' + (dtV.hint||'invalida'));
+    const advertencias = [];
+    if (dtV.valid && dtV.hint) advertencias.push(dtV.hint);
+    return { _idx:idx+1, _errores:errores, _advertencias:advertencias, tipo_embarque:tipo, unidad, cliente, ue_fecha:dtV.normalized_fecha, ue_hora:dtV.normalized_hora, _ue_fecha_display:dtV.display, cortina, _dtOk:dtV.valid, _dtHint:dtV.hint };
+  }).filter(f => f.unidad || f.tipo_embarque);
+  mesaRenderPreview();
+}
+
+function mesaRenderPreview() {
+  const card = document.getElementById('mesa-preview-card');
+  const wrap = document.getElementById('mesa-preview-table');
+  const summary = document.getElementById('mesa-parse-summary');
+  const errBox = document.getElementById('mesa-preview-errors');
+  const btnEnv = document.getElementById('mesa-btn-enviar');
+  if (!card||!wrap) return;
+  if (!mesaFilas.length) { card.classList.add('hidden'); return; }
+  card.classList.remove('hidden');
+  const total = mesaFilas.length;
+  const filaOk = mesaFilas.filter(f=>f._errores.length===0&&f._advertencias.length===0).length;
+  const filaWarn = mesaFilas.filter(f=>f._errores.length===0&&f._advertencias.length>0).length;
+  const filaErr = mesaFilas.filter(f=>f._errores.length>0).length;
+  document.getElementById('mesa-preview-count').textContent = total;
+  summary.innerHTML = `<div class="parse-summary"><div class="ps-item ps-ok">Correctas: ${filaOk}</div>${filaWarn?'<div class="ps-item ps-warn">Con advertencia: '+filaWarn+'</div>':''}${filaErr?'<div class="ps-item ps-err">Con error: '+filaErr+'</div>':''}<div class="ps-item" style="color:var(--gray-500)">Total: ${total}</div></div>`;
+  const hayErrores = filaErr > 0;
+  if (btnEnv) btnEnv.disabled = hayErrores;
+  if (errBox) {
+    if (hayErrores) { const msgs = mesaFilas.filter(f=>f._errores.length>0).map(f=>'Fila '+f._idx+': '+f._errores.join(' | ')).join('<br>'); errBox.style.display='block'; errBox.innerHTML='<strong>Filas con errores (no se enviaran):</strong><br>'+msgs; }
+    else errBox.style.display='none';
+  }
+  let html = `<table class="preview"><thead><tr><th>#</th><th>Tipo</th><th>Unidad</th><th>Cliente</th><th>Fecha y Hora UE</th><th>Cortina</th><th></th></tr></thead><tbody>`;
+  mesaFilas.forEach((f,i) => {
+    const rowCls = f._errores.length>0?'row-err':(f._advertencias.length>0?'row-warn':'row-ok');
+    const dtDisplay = f._ue_fecha_display||(f.ue_fecha?f.ue_fecha+(f.ue_hora?' '+f.ue_hora:''):'');
+    const dtBadge = f._dtOk?(f._dtHint?'<br><span class="val-warn">'+f._dtHint+'</span>':''):'<br><span class="val-err">'+(f._dtHint||'Invalida')+'</span>';
+    html += `<tr class="${rowCls}"><td><span style="font-family:var(--f-mono);color:var(--gray-500)">${f._idx}</span></td><td>${f.tipo_embarque||'<span class="val-err">Falta</span>'}</td><td><strong>${f.unidad||'<span class="val-err">Falta</span>'}</strong></td><td>${f.cliente||'<span class="val-err">Falta</span>'}</td><td style="font-family:var(--f-mono);white-space:nowrap">${dtDisplay||'<span class="val-err">Falta</span>'}${dtBadge}</td><td>${f.cortina||'<span style="color:var(--warn);font-size:10px">pendiente</span>'}</td><td><button onclick="mesaQuitarFila(${i})" style="background:var(--red);color:#fff;border:none;border-radius:4px;padding:3px 8px;font-size:10px;cursor:pointer">X</button></td></tr>`;
+  });
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+}
+
+function mesaQuitarFila(idx) { mesaFilas.splice(idx,1); mesaFilas.forEach((f,i)=>f._idx=i+1); mesaRenderPreview(); }
+
+function mesaAddManual() {
+  const tipo = document.getElementById('mm-tipo').value.trim();
+  const unidad = document.getElementById('mm-unidad').value.trim().toUpperCase();
+  const cliente = document.getElementById('mm-cliente').value.trim().toUpperCase();
+  const datetime = document.getElementById('mm-ue-datetime').value.trim();
+  const cortNum = document.getElementById('mm-cortina').value.trim();
+  if (!unidad) return toast('Unidad de envio obligatoria','error');
+  if (!tipo) return toast('Tipo de embarque obligatorio','error');
+  if (!cliente) return toast('Cliente obligatorio','error');
+  if (!datetime) return toast('Fecha y Hora UE obligatorias (DD/MM/YYYY HH:MM)','error');
+  const dtV = parseUEDatetime(datetime);
+  if (!dtV.valid) return toast('Formato incorrecto: ' + dtV.hint,'error');
+  const idx = mesaFilas.length + 1;
+  mesaFilas.push({ _idx:idx, _errores:[], _advertencias:dtV.hint?[dtV.hint]:[], tipo_embarque:tipo.toUpperCase(), unidad, cliente, ue_fecha:dtV.normalized_fecha, ue_hora:dtV.normalized_hora, _ue_fecha_display:dtV.display, cortina:cortNum?'DOOR'+cortNum:'', _dtOk:true, _dtHint:dtV.hint||'' });
+  mesaRenderPreview();
+  ['mm-tipo','mm-unidad','mm-cliente','mm-ue-datetime','mm-cortina'].forEach(id => { const e = document.getElementById(id); if (e) e.value = ''; });
+  toast('Fila agregada','success');
+}
+
+async function mesaEnviar() {
+  const filasValidas = mesaFilas.filter(f => f._errores.length === 0);
+  if (!filasValidas.length) return toast('Sin filas validas para enviar','error');
+  const nota = document.getElementById('mesa-nota').value.trim();
+  toast('Enviando a la nube...');
+  const res = await apiPost('mesa_create_pendientes', { filas:filasValidas, nota, usuario:session.name, turno:session.shift, cuadrilla:session.squad });
+  if (!res||!res.ok) return toast('Error al enviar','error');
+  const { creados=[], omitidos=[] } = res.data;
+  toast(''+creados.length+' asignaciones creadas'+(omitidos.length?' · '+omitidos.length+' duplicadas omitidas':''),'success');
+  mesaLimpiar(); syncPendientes();
+  const bandeja = document.getElementById('mesa-asignaciones-container');
+  if (bandeja) bandeja.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function mesaLimpiar() {
+  mesaFilas = [];
+  document.getElementById('mesa-paste').value = '';
+  document.getElementById('mesa-nota').value = '';
+  document.getElementById('mesa-preview-card').classList.add('hidden');
+}
+
+// ════════════════════════════════════════════════════════════════
+//  MESA — BANDEJA (sin MESA_OK — movido a Despacho)
+// ════════════════════════════════════════════════════════════════
+function renderMesaAsignaciones() {
+  const container = document.getElementById('mesa-asignaciones-container');
+  if (!container) return;
+  // MESA ya no muestra MESA_OK; ese estado migró al perfil Despacho
+  const activos = (pendientes||[]).filter(p => {
+    const s = p._estado||p.estado;
+    return s==='NUEVO'||s==='HERENCIA'||s==='AUDITADO';
+  });
+  if (!activos.length) {
+    container.innerHTML = '<div class="empty"><div class="em-icon">📭</div><div class="em-title">Sin asignaciones activas</div><div class="em-sub">Carga embarques desde Excel o manualmente para iniciar</div></div>';
+    return;
+  }
+  const grupos = {
+    NUEVO:    { items:[], label:'Nuevas asignaciones', cls:'brand', icon:'🆕' },
+    HERENCIA: { items:[], label:'Herencias activas', cls:'yellow', icon:'⟲' },
+    AUDITADO: { items:[], label:'Auditadas (esperan enriquecimiento)', cls:'dark', icon:'✓' }
+  };
+  activos.forEach(p => { const s=p._estado||p.estado; if (grupos[s]) grupos[s].items.push(p); });
+  let html = '';
+  Object.entries(grupos).forEach(([key, g]) => {
+    if (!g.items.length) return;
+    html += '<div class="pendiente-panel"><div class="pp-head '+g.cls+'">'+g.icon+' '+g.label+'<span class="pp-count">'+g.items.length+'</span></div>';
+    g.items.forEach(p => html += mesaAsignacionItemHTML(p, key));
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+function mesaAsignacionItemHTML(p, estado) {
+  const unidad    = p.unidad_envio||p.datos?.unidad_envio||'—';
+  const cliente   = p.cliente||p.datos?.cliente||'—';
+  const cortina   = p.cortina||p.datos?.cortina||'';
+  const tipoEmb   = p.tipo_embarque||p.datos?.tipo_embarque||'—';
+  const ueFecha   = p.ue_fecha||p.datos?.ue_fecha||'';
+  const ueHora    = p.ue_hora||p.datos?.ue_hora||'';
+  const sinCortina= !cortina;
+  const ultimoAud = p.ultimo_auditor?'Auditor: '+p.ultimo_auditor+' · '+(p.ultimo_turno||''):'';
+  return `
+    <div class="pp-item">
+      <div class="pp-icon">${estado==='NUEVO'?'🆕':estado==='HERENCIA'?'⟲':'✓'}</div>
+      <div class="pp-body">
+        <div class="pp-title">${unidad} · ${cliente}<span class="status ${estado.toLowerCase()}" style="margin-left:6px">${estado}</span></div>
+        <div class="pp-meta">
+          ${tipoEmb} · ${cortina?'<strong>'+cortina+'</strong>':'<span class="status cancelado">SIN CORTINA</span>'}
+          ${ueFecha?'<br>UE: '+formatISOtoDisplay_(ueFecha)+(ueHora?' '+ueHora:''):''}
+          ${ultimoAud?'<br>'+ultimoAud:''}
+          ${p.nota_mesa?'<br>'+p.nota_mesa:''}
+        </div>
+        <div class="pp-actions">
+          ${sinCortina?'<button class="pp-btn yellow" onclick="agregarCortinaRapido(\''+p.id+'\')">+ Cortina</button>':''}
+          <button class="pp-btn primary" onclick="abrirEditarAsig('${p.id}')">Editar</button>
+          <button class="pp-btn" style="background:#C0392B;color:#fff" onclick="abrirCancelar('${p.id}')">Cancelar</button>
+          ${estado==='AUDITADO'?'<button class="pp-btn yellow" onclick="switchTab(\'mesa-enriquece\');setTimeout(()=>{document.getElementById(\'mesa-buscar\').value=\''+unidad+'\';mesaBuscarEmbarque();},120)">Enriquecer</button>':''}
+          <button class="pp-btn ghost" onclick="verReporteUnidad('${unidad}')">Ver</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+async function agregarCortinaRapido(id) {
+  const valor = prompt('Cortina (solo numero, ej. 5 para DOOR5):');
+  if (!valor) return;
+  const num = parseInt(valor,10);
+  if (!num||num<1) return toast('Numero invalido','error');
+  toast('Agregando cortina...');
+  const res = await apiPost('mesa_edit_asignacion', { id, cambios:{ cortina:'DOOR'+num }, usuario: session.name });
+  if (!res||!res.ok) return toast('Error: '+(res?.error||''),'error');
+  toast('Cortina DOOR'+num+' agregada','success');
+  syncPendientes();
+}
+
+function abrirEditarAsig(id) {
+  const e = (pendientes||[]).find(x => x.id===id);
+  if (!e) return;
+  document.getElementById('modal-edit-asig-body').innerHTML = `
+    <div class="note info">Edita cualquier campo asignado. La trazabilidad se conserva en historial.</div>
+    <div class="form-row-2">
+      <div><label>Tipo de Embarque</label><input type="text" id="ea-tipo" value="${e.tipo_embarque||''}"></div>
+      <div><label>Unidad de Envio</label><input type="text" id="ea-unidad" value="${e.unidad_envio||''}"></div>
+    </div>
+    <div class="form-row-2">
+      <div><label>Cliente</label><input type="text" id="ea-cliente" value="${e.cliente||''}"></div>
+      <div><label>Cortina</label><input type="text" id="ea-cortina" value="${e.cortina||''}" placeholder="DOOR000"></div>
+    </div>
+    <div class="form-row-2">
+      <div style="grid-column:1/-1">
+        <label>Fecha y Hora UE de Envio</label>
+        <input type="text" id="ea-ue-datetime" placeholder="" maxlength="16" style="font-family:var(--f-mono)" value="${formatISOtoDisplay_(e.ue_fecha||'')}${e.ue_hora?' '+e.ue_hora:''}">
+        <div style="font-size:10px;color:var(--gray-500);margin-top:4px;font-family:var(--f-mono)">Formato: DD/MM/YYYY HH:MM</div>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="guardarEditarAsig('${id}')">Guardar cambios</button>
+  `;
+  document.getElementById('modal-edit-asig').classList.add('open');
+}
+
+async function guardarEditarAsig(id) {
+  const datetimeRawEdit = (document.getElementById('ea-ue-datetime')?.value||'').trim();
+  const dtEditV = datetimeRawEdit ? parseUEDatetime(datetimeRawEdit) : { valid:true, normalized_fecha:'', normalized_hora:'' };
+  if (datetimeRawEdit && !dtEditV.valid) return toast('Fecha/Hora invalida: ' + dtEditV.hint, 'error');
+  const cambios = { tipo_embarque:document.getElementById('ea-tipo').value.trim(), unidad_envio:document.getElementById('ea-unidad').value.trim(), cliente:document.getElementById('ea-cliente').value.trim(), cortina:document.getElementById('ea-cortina').value.trim(), ue_fecha:dtEditV.normalized_fecha, ue_hora:dtEditV.normalized_hora };
+  toast('Guardando...');
+  const res = await apiPost('mesa_edit_asignacion', { id, cambios, usuario:session.name });
+  if (!res||!res.ok) return toast('Error: '+(res?.error||''),'error');
+  toast('Cambios guardados','success');
+  closeModal('modal-edit-asig'); syncPendientes();
+}
+
+function abrirCancelar(id) {
+  const e = (pendientes||[]).find(x => x.id===id);
+  if (!e) return;
+  document.getElementById('modal-cancel-body').innerHTML = `
+    <div class="note danger"><strong>${e.unidad_envio}</strong> · ${e.cliente} · ${e.tipo_embarque||'—'}</div>
+    <div class="note info">La cancelacion es definitiva. Si la unidad regresa al patio, podra cargarse nuevamente.</div>
+    <div class="form-row">
+      <label>Razon de Cancelacion <span class="req">*</span></label>
+      <select id="cancel-razon">
+        <option value="">— Seleccionar —</option>
+        <option>Unidad no se presento</option><option>Unidad ineficiente</option>
+        <option>Cliente cancelo</option><option>Problema con la mercancia</option>
+        <option>Error de planeacion</option><option>Reprogramada (volvera despues)</option><option>Otra razon</option>
+      </select>
+    </div>
+    <div class="form-row"><label>Observaciones</label><textarea id="cancel-obs" placeholder="Detalla la razon..."></textarea></div>
+    <button class="btn btn-danger" onclick="confirmCancelacion('${id}')">Confirmar Cancelacion</button>
+  `;
+  document.getElementById('modal-cancel').classList.add('open');
+}
+
+async function confirmCancelacion(id) {
+  const razon = document.getElementById('cancel-razon').value;
+  const obs = document.getElementById('cancel-obs').value.trim();
+  if (!razon) return toast('Selecciona una razon','error');
+  toast('Cancelando...');
+  const res = await apiPost('mesa_cancel_embarque', { id, razon, obs, usuario:session.name });
+  if (!res||!res.ok) return toast('Error: '+(res?.error||''),'error');
+  toast('Embarque cancelado','success');
+  closeModal('modal-cancel'); syncPendientes();
+}
+
+// ════════════════════════════════════════════════════════════════
+//  MESA — ENRIQUECIMIENTO
+// ════════════════════════════════════════════════════════════════
+function renderMesaEnriquece() {
+  const tab = document.getElementById('tab-mesa-enriquece');
+  if (!tab) return;
+  const tipoOpts = TIPOS_TARIMA.map(t => '<option>'+t+'</option>').join('');
+  tab.innerHTML = `
+    <div class="section-head">
+      <div class="section-icon">🟣</div>
+      <div><div class="section-title">Enriquecimiento Mesa de Control</div><div class="section-desc">Captura Prime T1/T2, MC, Asset Type · Calculo automatico de diferencias</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title ct-mesa"><span class="ct-dot"></span>Buscar Embarque</div>
+      <div class="form-row"><label>Unidad de Envio <span class="req">*</span></label><input type="text" id="mesa-buscar" placeholder="UE-00000"></div>
+      <button class="btn btn-dark" onclick="mesaBuscarEmbarque()">Buscar</button>
+    </div>
+    <div id="mesa-resultado" style="display:none">
+      <div class="card">
+        <div class="card-title ct-mesa"><span class="ct-dot"></span>Embarque Encontrado</div>
+        <div class="detail-grid" id="mesa-emb-info"></div>
+      </div>
+      <div class="card">
+        <div class="card-title ct-mesa"><span class="ct-dot"></span>Tarima 1 <span style="color:var(--red);font-size:11px;margin-left:6px">*</span></div>
+        <div class="form-row-2">
+          <div><label>Cant. Prime T1 <span class="req">*</span></label><input type="number" id="me-prime-t1" min="0" placeholder="0"></div>
+          <div><label>Tipo Tarima T1 <span class="req">*</span></label><select id="me-tipo-t1"><option value="">—</option>${tipoOpts}</select></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title ct-mesa"><span class="ct-dot"></span>Tarima 2 <span class="opt">Opcional</span></div>
+        <div class="form-row-2">
+          <div><label>Cant. Prime T2</label><input type="number" id="me-prime-t2" min="0" placeholder="0"></div>
+          <div><label>Tipo Tarima T2</label><select id="me-tipo-t2"><option value="">—</option>${tipoOpts}</select></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title ct-mesa"><span class="ct-dot"></span>Cantidad MC</div>
+        <div class="form-row"><label>Cantidad MC (Mesa) <span class="req">*</span></label><input type="number" id="me-cant-mc" min="0" placeholder="0"></div>
+        <div class="note info" id="me-dif-preview" style="display:none"></div>
+      </div>
+      <div class="asset-block">
+        <div class="ab-title">Ajuste de Asset Type</div>
+        <div class="form-row">
+          <label>Se realizo ajuste de Asset Type? <span class="req">*</span></label>
+          <div class="toggle-group" id="me-asset">
+            <div class="toggle-opt" onclick="toggleSelect(this,'me-asset');onAssetChange()">SI</div>
+            <div class="toggle-opt selected ok" onclick="toggleSelect(this,'me-asset','ok');onAssetChange()">NO</div>
+          </div>
+        </div>
+        <div id="me-asset-evidence" class="hidden">
+          <div class="note warn">Evidencia obligatoria si se ajusto Asset Type · Pega con Ctrl+V o arrastra un archivo</div>
+          <div class="photo-zone" id="pz-asset" tabindex="0"
+               ondragover="event.preventDefault();this.classList.add('drag-active')"
+               ondragleave="this.classList.remove('drag-active')"
+               ondrop="onAssetDrop(event)">
+            <div class="pz-icon">📷</div><p>Pega imagen (Ctrl+V), arrastra o selecciona</p><span>Evidencia del ajuste</span>
+            <input type="file" accept="image/*,application/pdf" onchange="handleAssetCapture(event)">
+          </div>
+          <div id="me-asset-preview" style="margin-top:10px"></div>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="submitMesaEnriquece()">Guardar Enriquecimiento →</button>
+      <div style="height:8px"></div>
+      <button class="btn btn-ghost" onclick="mesaCancelarBusqueda()">Cancelar</button>
+    </div>
+    <div id="mesa-no-result" class="empty" style="display:none">
+      <div class="em-icon">🔍</div><div class="em-title">Sin resultados</div><div class="em-sub">Esa unidad no esta </div>
+    </div>
+  `;
+  setTimeout(() => {
+    ['me-prime-t1','me-prime-t2','me-cant-mc'].forEach(id => {
+      const e = document.getElementById(id);
+      if (e) e.addEventListener('input', updateDifPreview);
+    });
+  }, 100);
+}
+
+function updateDifPreview() {
+  const t1 = Number(document.getElementById('me-prime-t1')?.value||0);
+  const t2 = Number(document.getElementById('me-prime-t2')?.value||0);
+  const mc = Number(document.getElementById('me-cant-mc')?.value||0);
+  const dif = (t1+t2) - mc;
+  const el = document.getElementById('me-dif-preview');
+  if (!el) return;
+  if (!t1&&!t2&&!mc) { el.style.display='none'; return; }
+  el.style.display='block';
+  el.className='note '+(dif===0?'ok':'warn');
+  el.innerHTML='Total Prime <strong>'+(t1+t2)+'</strong> vs MC <strong>'+mc+'</strong> = Dif. <strong>'+dif+'</strong> '+(dif===0?'OK':'Hay diferencia');
+}
+
+function onAssetChange() {
+  const sel = document.querySelector('#me-asset .toggle-opt.selected');
+  const si = sel && sel.textContent.trim() === 'SI';
+  document.getElementById('me-asset-evidence').classList.toggle('hidden', !si);
+  if (!si) { assetCapture=null; document.getElementById('me-asset-preview').innerHTML=''; }
+}
+
+let mesaEmbarqueActual = null;
+
+async function mesaBuscarEmbarque() {
+  const u = (document.getElementById('mesa-buscar').value||'').trim().toUpperCase();
+  if (!u) return toast('Ingresa la unidad','error');
+  toast('Buscando...');
+  const res = await apiGet('get_embarque_byunit', { unidad: u });
+  if (!res||!res.ok||!res.data) {
+    document.getElementById('mesa-resultado').style.display='none';
+    document.getElementById('mesa-no-result').style.display='block';
+    return toast('No encontrado','error');
+  }
+  mesaEmbarqueActual = res.data;
+  document.getElementById('mesa-no-result').style.display='none';
+  document.getElementById('mesa-resultado').style.display='block';
+  document.getElementById('mesa-emb-info').innerHTML = `
+    <div class="dt-item dt-brand"><span class="dt-label">ID</span><span class="dt-value" style="font-family:var(--f-mono);font-size:11px">${res.data.id}</span></div>
+    <div class="dt-item dt-brand"><span class="dt-label">Unidad</span><span class="dt-value">${res.data.unidad_envio}</span></div>
+    <div class="dt-item"><span class="dt-label">Cliente</span><span class="dt-value">${res.data.cliente||'—'}</span></div>
+    <div class="dt-item"><span class="dt-label">Cortina</span><span class="dt-value">${res.data.cortina||'—'}</span></div>
+    <div class="dt-item"><span class="dt-label">Estado</span><span class="dt-value"><span class="status ${(res.data.estado_global||'').toLowerCase()}">${res.data.estado_global||'—'}</span></span></div>
+    <div class="dt-item"><span class="dt-label">Auditor</span><span class="dt-value">${res.data.auditor_nombre||'—'}</span></div>
+  `;
+  toast('Encontrado','success');
+}
+
+async function submitMesaEnriquece() {
+  if (!mesaEmbarqueActual) return toast('Busca un embarque','error');
+  const t1 = Number(document.getElementById('me-prime-t1').value||0);
+  const tt1 = document.getElementById('me-tipo-t1').value;
+  const t2 = Number(document.getElementById('me-prime-t2').value||0);
+  const tt2 = document.getElementById('me-tipo-t2').value;
+  const mc = Number(document.getElementById('me-cant-mc').value||0);
+  const asset = getToggleValue('me-asset');
+  if (!tt1) return toast('Tipo Tarima T1 obligatorio','error');
+  if (!asset) return toast('Indica si hubo ajuste de Asset Type','error');
+  const ajusteSi = asset.toUpperCase().includes('SI');
+  if (ajusteSi&&!assetCapture) return toast('Evidencia de Asset Type obligatoria','error');
+  toast('Guardando...');
+  const res = await apiPost('mesa_enrich_embarque', { id:mesaEmbarqueActual.id, data:{ cant_prime_t1:t1, tipo_tarima_t1:tt1, cant_prime_t2:t2, tipo_tarima_t2:tt2, cantidad_mc:mc, ajuste_asset_type:ajusteSi?'SI':'NO', usuario:session.name } });
+  if (!res||!res.ok) return toast('Error: '+(res?.error||''),'error');
+  if (ajusteSi&&assetCapture) {
+    const assetId = (res.data&&res.data.id) ? res.data.id : mesaEmbarqueActual.id;
+    let assetOk = false;
+    for (let attempt=0; attempt<3 && !assetOk; attempt++) {
+      try {
+        const ur = await uploadEvidence(assetId,'embarque','asset_type','asset_type',assetCapture);
+        if (ur && ur.ok !== false) assetOk = true;
+        else if (attempt<2) await new Promise(r=>setTimeout(r,800*(attempt+1)));
+      } catch(e) {
+        if (attempt<2) await new Promise(r=>setTimeout(r,800*(attempt+1)));
+      }
+    }
+    if (!assetOk) toast('Evidencia asset_type no pudo subirse. El enriquecimiento fue guardado.','warn');
+  }
+  toast('Enriquecido · Dif. Prime/MC: '+res.data.dif_prime_mc,'success');
+  mesaCancelarBusqueda();
+}
+
+function mesaCancelarBusqueda() {
+  mesaEmbarqueActual=null; assetCapture=null;
+  document.getElementById('mesa-buscar').value='';
+  document.getElementById('mesa-resultado').style.display='none';
+  document.getElementById('mesa-no-result').style.display='none';
+  ['me-prime-t1','me-prime-t2','me-cant-mc'].forEach(id=>{ const e=document.getElementById(id); if(e)e.value=''; });
+  document.getElementById('me-tipo-t1').value='';
+  document.getElementById('me-tipo-t2').value='';
+  document.getElementById('me-asset-preview').innerHTML='';
+}
+
+async function handleAssetCapture(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  await ingestAssetFile(file);
+  event.target.value='';
+}
+
+async function ingestAssetFile(file) {
+  if (!file) return;
+  const comp = file.type.startsWith('image/') ? await compressImage(file,1200,1200,0.72) : await fileToBase64(file);
+  assetCapture = { name:file.name||('asset_'+Date.now()+'.png'), data:comp.data, type:file.type };
+  const prev = document.getElementById('me-asset-preview');
+  if (file.type.startsWith('image/')) { prev.innerHTML='<img src="'+comp.data+'" style="max-width:100%;max-height:160px;border-radius:8px;border:1px solid var(--gray-200)">'; }
+  else { prev.innerHTML='<div class="note info">'+file.name+'</div>'; }
+  toast('Evidencia lista','success');
+}
+
+function onAssetDrop(ev) {
+  ev.preventDefault(); ev.currentTarget.classList.remove('drag-active');
+  const file = ev.dataTransfer?.files?.[0];
+  if (file) ingestAssetFile(file);
+}
+
+function setupAssetPasteListener() {
+  if (window.__assetPasteBound) return;
+  window.__assetPasteBound = true;
+  document.addEventListener('paste', async (e) => {
+    const evidenceVisible = !document.getElementById('me-asset-evidence')?.classList.contains('hidden');
+    if (!evidenceVisible) return;
+    const items = e.clipboardData?.items||[];
+    for (const it of items) {
+      if (it.type&&it.type.startsWith('image/')) {
+        const blob = it.getAsFile();
+        if (blob) { const file = new File([blob],'pegado_'+Date.now()+'.png',{type:blob.type}); await ingestAssetFile(file); e.preventDefault(); break; }
+      }
+    }
+  });
+}
+
+// ════════════════════════════════════════════════════════════════
+//  DESPACHO — CIERRE  (v2: sección Enriquecidas + sin tabla)
+// ════════════════════════════════════════════════════════════════
+function renderDespachoCierre() {
+  const tab = document.getElementById('tab-despacho-cierre');
+  if (!tab) return;
+  tab.innerHTML = `
+    <div class="section-head">
+      <div class="section-icon">✅</div>
+      <div><div class="section-title">Validacion y Cierre</div><div class="section-desc">Enriquecidas listas para despacho · Validacion MC vs Factura</div></div>
+    </div>
+
+    <!-- SECCION ENRIQUECIDAS (antes solo en Mesa) -->
+    <div class="desp-enriquecidas">
+      <div class="de-head">
+        Enriquecidas — Esperan Despacho
+        <span class="de-count" id="desp-enr-count">0</span>
+      </div>
+      <div class="de-body" id="desp-enr-lista">
+        <div class="empty" style="padding:20px"><div class="em-title" style="font-size:13px">Cargando...</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title ct-despacho"><span class="ct-dot"></span>Busqueda individual</div>
+      <div class="form-row">
+        <label>Unidad de Envio</label>
+        <input type="text" id="dp-buscar" placeholder="UE-00000" onkeydown="if(event.key==='Enter')despachoBuscar()">
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-dark" onclick="despachoBuscar()">Buscar</button>
+        <button class="btn btn-ghost btn-sm" style="width:auto" onclick="loadDespachoEnriquecidas()">Actualizar lista</button>
+      </div>
+    </div>
+
+    <div id="dp-resultado" style="display:none">
+      <div class="card">
+        <div class="card-title ct-despacho"><span class="ct-dot"></span>Embarque</div>
+        <div class="detail-grid" id="dp-info"></div>
+      </div>
+      <div class="card">
+        <div class="card-title ct-despacho"><span class="ct-dot"></span>Datos de Validacion</div>
+        <div class="form-row-2">
+          <div><label>Cantidad MC <span class="req">*</span></label><input type="number" id="dp-cant-mc" min="0" placeholder="0"></div>
+          <div><label>Cantidad Factura <span class="req">*</span></label><input type="number" id="dp-cant-factura" min="0" placeholder="0"></div>
+        </div>
+        <div class="note info" id="dp-dif-preview" style="display:none"></div>
+      </div>
+      <div class="card">
+        <div class="card-title ct-despacho"><span class="ct-dot"></span>Evidencia Obligatoria <span style="color:var(--red);font-size:11px;margin-left:6px">*</span></div>
+        <div class="note info" id="dp-ev-existente" style="display:none"></div>
+        <div class="photo-zone" id="pz-despacho">
+          <div class="pz-icon">📄</div><p>Subir documento</p><span>PDF, imagen o Word</span>
+          <input type="file" accept=".pdf,.doc,.docx,image/*" onchange="handleDespachoDoc(event)">
+        </div>
+        <div id="dp-doc-preview" style="margin-top:10px"></div>
+      </div>
+      <div class="card">
+        <div class="card-title ct-despacho"><span class="ct-dot"></span>Seguimiento (opcional)</div>
+        <div class="note info">Si aun no puedes cerrar, deja una nota de avance. El embarque permanecera en la bandeja.</div>
+        <div class="form-row"><label>Nota de seguimiento</label><textarea id="dp-seguimiento" placeholder="Pendiente factura · Esperando confirmacion..."></textarea></div>
+        <button class="btn btn-dark" onclick="enviarSeguimientoDespacho()">Guardar Seguimiento</button>
+      </div>
+      <button class="btn btn-primary" onclick="submitDespacho()">Validar y Cerrar</button>
+      <div style="height:8px"></div>
+      <button class="btn btn-ghost" onclick="despachoCancelar()">Cancelar</button>
+    </div>
+    <div id="dp-no-result" class="empty" style="display:none">
+      <div class="em-icon">🔍</div><div class="em-title">Sin resultados</div>
+    </div>
+  `;
+  setTimeout(() => {
+    ['dp-cant-mc','dp-cant-factura'].forEach(id => {
+      const e = document.getElementById(id);
+      if (e) e.addEventListener('input', updateDespachoDifPreview);
+    });
+    loadDespachoEnriquecidas();
+  }, 100);
+}
+
+// NUEVO: carga la sección de Enriquecidas desde pendientes
+async function loadDespachoEnriquecidas() {
+  await syncPendientes();
+  renderDespEnriquecidas();
+}
+
+function renderDespEnriquecidas() {
+  const lista = document.getElementById('desp-enr-lista');
+  const countEl = document.getElementById('desp-enr-count');
+  if (!lista) return;
+  const items = (pendientes||[]).filter(p => {
+    const s = p._estado||p.estado;
+    return s==='MESA_OK';
+  });
+  if (countEl) countEl.textContent = items.length;
+  if (!items.length) {
+    lista.innerHTML = '<div class="empty" style="padding:24px"><div class="em-icon" style="font-size:32px">📭</div><div class="em-title" style="font-size:14px">Sin embarques enriquecidos pendientes</div><div class="em-sub">Cuando Mesa complete el enriquecimiento apareceran aqui</div></div>';
+    return;
+  }
+  lista.innerHTML = items.map(p => {
+    const unidad = p.unidad_envio||p.datos?.unidad_envio||'—';
+    const cliente = p.cliente||p.datos?.cliente||'—';
+    const cortina = p.cortina||p.datos?.cortina||'';
+    const tipoEmb = p.tipo_embarque||p.datos?.tipo_embarque||'—';
+    const totalPrime = p.total_prime||p.datos?.total_prime||'—';
+    const mesaOrigen = p.mesa_origen||p.datos?.mesa_origen||'—';
+    return `
+      <div class="de-item">
+        <div class="de-icon">MC</div>
+        <div class="pp-body">
+          <div class="pp-title">${unidad} · ${cliente}</div>
+          <div class="pp-meta" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:5px">
+            <span style="font-size:11px;color:var(--gray-500)">${tipoEmb}</span>
+            ${cortina?`<span style="background:var(--ink);color:var(--yellow);padding:2px 8px;border-radius:4px;font-family:var(--f-mono);font-weight:800;font-size:11px">${cortina}</span>`:''}
+            <span class="de-prime-chip">Prime: ${totalPrime}</span>
+            <span style="font-size:10px;color:var(--gray-500)">Mesa: ${mesaOrigen}</span>
+          </div>
+          <div class="pp-actions">
+            <button class="pp-btn primary" onclick="seleccionarParaCierre('${unidad}')">Seleccionar para cierre</button>
+            <button class="pp-btn ghost" onclick="verReporteUnidad('${unidad}')">Ver detalle</button>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function seleccionarParaCierre(unidad) {
+  const inp = document.getElementById('dp-buscar');
+  if (inp) inp.value = unidad;
+  despachoBuscar();
+  setTimeout(() => { const r = document.getElementById('dp-resultado'); if (r) r.scrollIntoView({ behavior:'smooth', block:'start' }); }, 350);
+}
+
+async function enviarSeguimientoDespacho() {
+  if (!despachoEmbActual) return toast('Busca un embarque','error');
+  const nota = (document.getElementById('dp-seguimiento')?.value||'').trim();
+  if (!nota) return toast('Escribe una nota de seguimiento','error');
+  toast('Guardando seguimiento...');
+  const res = await apiPost('despacho_seguimiento', { id:despachoEmbActual.id, nota, usuario:session.name });
+  if (!res||!res.ok) return toast('Error: '+(res?.error||''),'error');
+  toast('Seguimiento guardado','success');
+  document.getElementById('dp-seguimiento').value='';
+}
+
+function updateDespachoDifPreview() {
+  const mc = Number(document.getElementById('dp-cant-mc')?.value||0);
+  const fa = Number(document.getElementById('dp-cant-factura')?.value||0);
+  const dif = mc-fa;
+  const el = document.getElementById('dp-dif-preview');
+  if (!el) return;
+  if (!mc&&!fa) { el.style.display='none'; return; }
+  el.style.display='block';
+  el.className='note '+(dif===0?'ok':'warn');
+  el.innerHTML='MC <strong>'+mc+'</strong> vs Factura <strong>'+fa+'</strong> = Dif. <strong>'+dif+'</strong> '+(dif===0?'OK':'DIFERENCIA');
+}
+
+let despachoEmbActual = null;
+
+async function despachoBuscar() {
+  const u = (document.getElementById('dp-buscar').value||'').trim().toUpperCase();
+  if (!u) return toast('Ingresa la unidad','error');
+  toast('Buscando...');
+  const res = await apiGet('get_embarque_byunit',{unidad:u});
+  if (!res||!res.ok||!res.data) {
+    document.getElementById('dp-resultado').style.display='none';
+    document.getElementById('dp-no-result').style.display='block';
+    return toast('No encontrado','error');
+  }
+  despachoEmbActual=res.data;
+  document.getElementById('dp-no-result').style.display='none';
+  document.getElementById('dp-resultado').style.display='block';
+  document.getElementById('dp-info').innerHTML=`
+    <div class="dt-item dt-brand"><span class="dt-label">Unidad</span><span class="dt-value">${res.data.unidad_envio}</span></div>
+    <div class="dt-item dt-brand"><span class="dt-label">Cliente</span><span class="dt-value">${res.data.cliente||'—'}</span></div>
+    <div class="dt-item"><span class="dt-label">Estado</span><span class="dt-value"><span class="status ${(res.data.estado_global||'').toLowerCase()}">${res.data.estado_global||'—'}</span></span></div>
+    <div class="dt-item"><span class="dt-label">Total Prime</span><span class="dt-value">${res.data.total_prime||0}</span></div>
+    <div class="dt-item"><span class="dt-label">Cant. MC (Mesa)</span><span class="dt-value">${res.data.cantidad_mc||0}</span></div>
+    <div class="dt-item"><span class="dt-label">Dif. Prime/MC</span><span class="dt-value">${res.data.dif_prime_mc!=null?res.data.dif_prime_mc:'—'}</span></div>
+    ${res.data.ue_fecha?'<div class="dt-item"><span class="dt-label">UE Fecha/Hora</span><span class="dt-value">'+formatISOtoDisplay_(res.data.ue_fecha)+' '+(res.data.ue_hora||'')+'</span></div>':''}
+    ${res.data.seguimiento_despacho?'<div class="dt-item dt-yellow" style="grid-column:1/-1"><span class="dt-label">Seguimiento previo</span><span class="dt-value">'+res.data.seguimiento_despacho+'</span></div>':''}
+  `;
+
+  // Mostrar evidencias existentes del embarque si existen (PDFs y fotos)
+  const evUrls = (res.data.evidencias_urls||'').toString().trim();
+  const evEl = document.getElementById('dp-ev-existente');
+  if (evUrls && evEl) {
+    const urlList = evUrls.split('\n').filter(u => u.trim());
+    if (urlList.length) {
+      const linksHtml = urlList.map(u => renderEvidenciaUrl_(u)).join('');
+      evEl.style.display='block';
+      evEl.innerHTML = '<strong>Evidencias registradas:</strong><div style="margin-top:8px">'+linksHtml+'</div>';
+    } else { evEl.style.display='none'; }
+  } else if (evEl) { evEl.style.display='none'; }
+
+  const segEl=document.getElementById('dp-seguimiento');
+  if (segEl) segEl.value=res.data.seguimiento_despacho||'';
+  toast('Encontrado','success');
+}
+
+async function submitDespacho() {
+  if (!despachoEmbActual) return toast('Busca un embarque','error');
+  const mc = document.getElementById('dp-cant-mc').value;
+  const fa = document.getElementById('dp-cant-factura').value;
+  if (mc===''||fa==='') return toast('Captura ambas cantidades','error');
+  if (!despachoDoc) return toast('Evidencia obligatoria','error');
+  toast('Validando...');
+  const seguimiento = (document.getElementById('dp-seguimiento')?.value||'').trim();
+  const res = await apiPost('despacho_validate', {
+    id: despachoEmbActual.id,
+    data: { cantidad_mc_despacho: Number(mc), cantidad_factura: Number(fa), seguimiento, usuario: session.name }
+  });
+  if (!res||!res.ok) return toast('Error: '+(res?.error||''),'error');
+  // Subir evidencia con chunking automático para PDFs grandes
+  const dspId = (res.data&&res.data.id) ? res.data.id : despachoEmbActual.id;
+  toast('Subiendo evidencia de cierre...');
+  const uploadOk = await uploadEvidenceDespacho_(dspId, despachoDoc);
+  if (!uploadOk) toast('Evidencia no pudo subirse. El cierre fue guardado.','warn');
+  const r = res.data;
+  toast(r.resultado+' · Dif. MC/Factura: '+r.dif_mc_factura, r.resultado==='OK'?'success':'warn');
+  despachoCancelar();
+  loadDespachoEnriquecidas();
+}
+
+function despachoCancelar() {
+  despachoEmbActual=null; despachoDoc=null;
+  document.getElementById('dp-buscar').value='';
+  document.getElementById('dp-resultado').style.display='none';
+  document.getElementById('dp-no-result').style.display='none';
+  ['dp-cant-mc','dp-cant-factura','dp-seguimiento'].forEach(id=>{ const e=document.getElementById(id); if(e)e.value=''; });
+  document.getElementById('dp-doc-preview').innerHTML='';
+  const evEl=document.getElementById('dp-ev-existente');
+  if (evEl) evEl.style.display='none';
+}
+
+async function handleDespachoDoc(event) {
+  const file = event.target.files[0]; if (!file) return;
+  // Imágenes: comprimir. PDFs y otros: base64 directo, sin modificar el contenido.
+  const processed = file.type.startsWith('image/')
+    ? await compressImage(file, 1100, 1100, 0.70)
+    : await fileToBase64(file);
+  despachoDoc = { name: file.name, data: processed.data, type: file.type, originalSize: file.size };
+  const prev = document.getElementById('dp-doc-preview');
+  const kb = Math.round(file.size / 1024);
+  if (file.type.startsWith('image/')) {
+    prev.innerHTML = '<img src="' + processed.data + '" style="max-width:100%;max-height:160px;border-radius:8px;border:1px solid var(--gray-200)">'
+      + '<div style="font-size:11px;color:var(--gray-500);margin-top:4px">' + file.name + ' · ' + kb + ' KB</div>';
+  } else if (file.type === 'application/pdf') {
+    prev.innerHTML = '<div style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--gray-100);border-radius:var(--r-sm);border:1px solid var(--gray-200)">'
+      + '<span style="font-size:22px">&#128196;</span>'
+      + '<div style="min-width:0"><div style="font-size:13px;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + file.name + '</div>'
+      + '<div style="font-size:11px;color:var(--gray-500);margin-top:2px">' + kb + ' KB — listo para subir</div>'
+      + '</div></div>';
+  } else {
+    prev.innerHTML = '<div class="note info">' + file.name + ' · ' + kb + ' KB</div>';
+  }
+  toast('Documento listo — ' + kb + ' KB', 'success');
+}
+
+let resumenTimer=null;
+
+function renderSupResumen() {
+  const tab=document.getElementById('tab-sup-resumen');
+  if(!tab)return;
+  const todayStr=new Date().toISOString().slice(0,10);
+  tab.innerHTML=`
+    <div class="section-head"><div class="section-icon" style="font-family:var(--f-mono);font-weight:800;font-size:13px;color:var(--red)">RD</div><div><div class="section-title">Resumen Diario</div><div class="section-desc">Embarques y recibos por turno · Excluye cancelados</div></div></div>
+    <div class="card">
+      <div class="card-title"><span class="ct-dot"></span>Filtros</div>
+      <div class="form-row-2">
+        <div><label>Fecha</label><input type="date" id="res-fecha" value="${todayStr}" onchange="loadResumenDiario()"></div>
+        <div style="display:flex;align-items:flex-end;gap:8px">
+          <button class="btn btn-dark btn-sm" onclick="resSetToday()">Hoy</button>
+          <button class="btn btn-ghost btn-sm" onclick="loadResumenDiario()">Actualizar</button>
+        </div>
+      </div>
+      <div style="color:var(--gray-500);font-size:11px;margin-top:6px;font-family:var(--f-mono)" id="res-last-update">Cargando...</div>
+    </div>
+    <div id="resumen-content"></div>
+  `;
+  loadResumenDiario();
+  if(resumenTimer)clearInterval(resumenTimer);
+  resumenTimer=setInterval(()=>{ const active=document.getElementById('tab-sup-resumen')?.classList.contains('active'); if(active)loadResumenDiario(); },60000);
+}
+
+function resSetToday() {
+  const el=document.getElementById('res-fecha');
+  if(el){el.value=new Date().toISOString().slice(0,10);loadResumenDiario();}
+}
+
+function resumenTurnoRow_(turnoLabel, data) {
+  data = data || { embarques:0, recibos:0 };
+  return `<div class="dt-item dt-brand">
+    <span class="dt-label">${turnoLabel}</span>
+    <span class="dt-value" style="font-size:14px">${data.embarques} embarques / ${data.recibos} recibos</span>
+  </div>`;
+}
+
+async function loadResumenDiario() {
+  const c=document.getElementById('resumen-content'); if(!c)return;
+  const fecha=(document.getElementById('res-fecha')?.value||new Date().toISOString().slice(0,10));
+  if(!c.dataset.loaded){
+    c.innerHTML='<div class="empty"><div class="em-title">Cargando resumen...</div><div class="em-sub">Consultando datos en tiempo real</div></div>';
+  }
+  const res=await apiGet('get_resumen_diario',{fecha});
+  const upd=document.getElementById('res-last-update');
+  if(!res||!res.ok){
+    c.innerHTML='<div class="empty"><div class="em-title">Error de conexion</div><div class="em-sub">Verifica tu conexion e intenta nuevamente</div></div>';
+    if(upd) upd.textContent='Error al cargar — '+new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
+    return;
+  }
+  const d=res.data||{};
+  const t=d.turnos||{};
+  const total=d.total||{embarques:0,recibos:0};
+  c.dataset.loaded='1';
+  c.innerHTML=`
+    <div class="card">
+      <div class="card-title"><span class="ct-dot"></span>Total del Dia · ${d.fecha||fecha}</div>
+      <div class="detail-grid">
+        <div class="dt-item dt-brand"><span class="dt-label">Total Embarques</span><span class="dt-value" style="font-size:22px;font-family:var(--f-display)">${total.embarques||0}</span></div>
+        <div class="dt-item dt-yellow"><span class="dt-label">Total Recibos</span><span class="dt-value" style="font-size:22px;font-family:var(--f-display)">${total.recibos||0}</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="ct-dot"></span>Resumen por Turno</div>
+      ${resumenTurnoRow_('Turno 1 · 06:00 - 14:00', t.T1)}
+      <div style="height:8px"></div>
+      ${resumenTurnoRow_('Turno 2 · 14:00 - 21:30', t.T2)}
+      <div style="height:8px"></div>
+      ${resumenTurnoRow_('Turno 3 · 21:30 - 06:00', t.T3)}
+    </div>
+  `;
+  if(upd){const now=new Date();upd.textContent='Ultima actualizacion: '+now.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit',second:'2-digit'});}
+}
+
+// ════════════════════════════════════════════════════════════════
+//  SUPERVISOR — REPORTE  (v2: visor PDF embebido)
+// ════════════════════════════════════════════════════════════════
+function renderSupReporte() {
+  const tab=document.getElementById('tab-sup-reporte');
+  if(!tab)return;
+  tab.innerHTML=`
+    <div class="section-head"><div class="section-icon">🔍</div><div><div class="section-title">Reporte Historico</div><div class="section-desc">Consulta por Unidad de Envio · Trazabilidad completa · Evidencias con visor PDF</div></div></div>
+    <div class="card">
+      <div class="card-title"><span class="ct-dot"></span>Buscar Unidad de Envio</div>
+      <div class="form-row"><label>Unidad de Envio <span class="req">*</span></label><input type="text" id="rep-unidad" placeholder="UE-00000" onkeydown="if(event.key==='Enter')verReporteUnidadDesdeInput()"></div>
+      <button class="btn btn-primary" onclick="verReporteUnidadDesdeInput()">Consultar</button>
+    </div>
+    <div id="reporte-resultado"></div>
+  `;
+}
+
+function verReporteUnidadDesdeInput() {
+  const u=(document.getElementById('rep-unidad').value||'').trim();
+  if(!u) return toast('Ingresa una unidad','error');
+  verReporteUnidad(u);
+}
+
+async function verReporteUnidad(unidad) {
+  toast('Consultando...');
+  const res=await apiGet('get_reporte_unidad',{unidad});
+  if(!res||!res.ok) return toast('Error','error');
+  if(!res.data.encontrado){
+    toast('Unidad no encontrada','error');
+    const c=document.getElementById('reporte-resultado');
+    if(c)c.innerHTML='<div class="empty"><div class="em-icon">🔍</div><div class="em-title">Sin resultados</div></div>';
+    return;
+  }
+  renderReporteUnidad(res.data);
+}
+
+// FIX: renderizado de evidencias con visor PDF embebido
+function buildEvidenciaCard(e) {
+  const isPdf = /\.pdf(\?|$)/i.test(e.filename||'') || (e.url||'').includes('application/pdf');
+  const isImg = /\.(jpg|jpeg|png|gif|webp)$/i.test(e.filename||'');
+  const ts = (e.timestamp||'').toString().slice(0,10);
+  const usuario = e.usuario||'—';
+  if (isPdf) {
+    return `<div class="ev-card" style="display:block;text-decoration:none">
+      <div class="pdf-viewer-wrap" style="margin:0;border-radius:0">
+        <div class="pdf-viewer-toolbar" style="border-radius:0">
+          <span>${e.filename||'Documento'}</span>
+          <a href="${e.url}" target="_blank" class="btn-open">Abrir</a>
+          <a href="${e.url}" download class="btn-dl">Descargar</a>
+        </div>
+        <iframe class="pdf-viewer-iframe" src="${(e.url||'').replace(/\/view(\\?.*)?$/,'/preview').replace(/\/edit(\\?.*)?$/,'/preview')}" loading="lazy" style="height:320px" allow="autoplay"></iframe>
+      </div>
+      <div class="ev-info"><div class="ev-name">${e.filename||'PDF'}</div><div class="ev-meta">${ts} · ${usuario}</div></div>
+    </div>`;
+  }
+  if (isImg) {
+    return `<a class="ev-card" href="${e.url}" target="_blank"><img src="${e.url}" alt="${e.filename}" loading="lazy"><div class="ev-info"><div class="ev-name">${e.filename||'Imagen'}</div><div class="ev-meta">${ts} · ${usuario}</div></div></a>`;
+  }
+  return `<a class="ev-card" href="${e.url}" target="_blank"><div class="ev-doc">📄</div><div class="ev-info"><div class="ev-name">${e.filename||'Archivo'}</div><div class="ev-meta">${ts} · ${usuario}</div></div></a>`;
+}
+
+async function exportarReportePDF() {
+  const rep=window.__lastReporte;
+  if(!rep||!rep.encontrado) return toast('No hay reporte en pantalla','error');
+  if(!window.jspdf||!window.jspdf.jsPDF) return toast('Libreria PDF no cargada, recarga la pagina','error');
+  toast('Generando PDF...');
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({unit:'pt',format:'a4'});
+  const PW=doc.internal.pageSize.getWidth(),PH=doc.internal.pageSize.getHeight();
+  const M=40,CONTENT_W=PW-M*2,LABEL_W=200,VALUE_X=M+LABEL_W,VALUE_W=CONTENT_W-LABEL_W;
+  let y=M;
+  const RGB={OK:[39,174,96],DANGER:[207,0,46],WARN:[253,208,0],NEUTRAL:[107,107,107],NEW:[255,178,102],GRID:[222,226,230],LABEL_BG:[247,248,250],INK:[33,37,41],INK_SOFT:[90,96,104]};
+  const statusBg=(val)=>{const v=String(val||'').toUpperCase().trim();if(!v||v==='—')return null;if(v==='CERRADO_CON_INCIDENCIAS'||v==='CANCELADO'||v==='DIFERENCIA'||v==='INCORRECTO')return RGB.DANGER;if(v==='CERRADO'||v==='OK'||v==='CORRECTO')return RGB.OK;if(v==='NUEVO')return RGB.NEW;if(v==='HERENCIA')return RGB.WARN;if(v==='AUDITADO'||v==='MESA_OK')return RGB.NEUTRAL;return null;};
+  toast('Preparando recursos...');
+  const instLogo=await getInstitutionalLogo();
+  function drawHeader(){doc.setFont('helvetica','italic');doc.setFontSize(8.5);doc.setTextColor(140,140,140);doc.text('Business Use',M,M-4);if(instLogo&&instLogo.data){const targetW=80;const ratio=instLogo.h&&instLogo.w?instLogo.h/instLogo.w:0.35;const targetH=Math.max(16,Math.min(36,targetW*ratio));const fmt=(instLogo.data.indexOf('image/png')!==-1)?'PNG':'JPEG';try{doc.addImage(instLogo.data,fmt,PW-M-targetW,M-16,targetW,targetH);}catch(_){}}doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(120,120,120);doc.text('DHL / P&G',PW-M,M+18,{align:'right'});doc.setDrawColor(RGB.GRID[0],RGB.GRID[1],RGB.GRID[2]);doc.setLineWidth(0.5);doc.line(M,M+24,PW-M,M+24);}
+  function newPage(){doc.addPage();drawHeader();y=M+42;}
+  function ensureSpace(needed){if(y+needed>PH-M-20)newPage();}
+  drawHeader();y=M+42;
+  doc.setFont('helvetica','bold');doc.setFontSize(14);doc.setTextColor(RGB.INK[0],RGB.INK[1],RGB.INK[2]);doc.text('Reporte Historico de Embarque',M,y);y+=15;
+  doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(RGB.INK_SOFT[0],RGB.INK_SOFT[1],RGB.INK_SOFT[2]);doc.text('Generado: '+new Date().toLocaleString('es-MX',{dateStyle:'medium',timeStyle:'short'}),M,y);y+=18;
+  function sectionHeader(title){ensureSpace(28);doc.setFillColor(238,240,244);doc.rect(M,y,CONTENT_W,22,'F');doc.setDrawColor(RGB.GRID[0],RGB.GRID[1],RGB.GRID[2]);doc.setLineWidth(0.5);doc.rect(M,y,CONTENT_W,22);doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(RGB.INK[0],RGB.INK[1],RGB.INK[2]);doc.text(title,M+10,y+14.5);y+=22;}
+  function dataRow(label,value,opts){opts=opts||{};let valStr=(value===null||value===undefined||value==='')?'—':String(value);if(valStr==='undefined'||valStr==='null')valStr='—';if(valStr==='—'&&opts.bgColor)opts.bgColor=null;doc.setFontSize(9);const wrapped=doc.splitTextToSize(valStr,VALUE_W-16);const rowH=Math.max(20,12+wrapped.length*11);ensureSpace(rowH);doc.setFillColor(RGB.LABEL_BG[0],RGB.LABEL_BG[1],RGB.LABEL_BG[2]);doc.rect(M,y,LABEL_W,rowH,'F');if(opts.bgColor){doc.setFillColor(opts.bgColor[0],opts.bgColor[1],opts.bgColor[2]);doc.rect(VALUE_X,y,VALUE_W,rowH,'F');}else{doc.setFillColor(255,255,255);doc.rect(VALUE_X,y,VALUE_W,rowH,'F');}doc.setDrawColor(RGB.GRID[0],RGB.GRID[1],RGB.GRID[2]);doc.setLineWidth(0.5);doc.rect(M,y,CONTENT_W,rowH);doc.line(VALUE_X,y,VALUE_X,y+rowH);doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(RGB.INK_SOFT[0],RGB.INK_SOFT[1],RGB.INK_SOFT[2]);doc.text(label,M+10,y+rowH/2+3);if(opts.bgColor){const bg=opts.bgColor;const isYellow=bg[0]>200&&bg[1]>180&&bg[2]<80;if(isYellow)doc.setTextColor(33,37,41);else doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(9.5);doc.text(valStr,PW-M-10,y+rowH/2+3,{align:'right'});}else{doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(RGB.INK[0],RGB.INK[1],RGB.INK[2]);const lineH=11;const startY=y+(rowH-wrapped.length*lineH)/2+8;doc.text(wrapped,VALUE_X+10,startY);}y+=rowH;}
+  const r=rep.resumen,a=rep.tabs?.embarque?.auditor||{},mm=rep.tabs?.embarque?.mesa||{},dp=rep.tabs?.embarque?.despacho||{};
+  sectionHeader('Auditoria de embarque');
+  dataRow('Unidad de Envio',r.unidad);dataRow('Cliente',r.cliente);dataRow('Cortina',r.cortina);
+  dataRow('UE Fecha / Hora',(formatISOtoDisplay_((r.ue_fecha||'').toString())+' '+(r.ue_hora||'')).trim()||'—');
+  dataRow('Estado Global',r.estado_global,{bgColor:statusBg(r.estado_global)});
+  dataRow('Resultado Final',r.resultado,{bgColor:statusBg(r.resultado)});
+  dataRow('Pallets CHEP',r.total_chep||0);dataRow('Pallets Blancas',r.total_blancas||0);dataRow('Total Pallets',r.total_pallets||0);
+  if(a.nombre){y+=8;sectionHeader('Auditor');dataRow('Nombre',a.nombre);dataRow('Turno',a.turno);dataRow('Cuadrilla',a.cuadrilla);dataRow('Tipo Auditoria',a.tipo_auditoria);dataRow('Status MC',a.status_mc,{bgColor:a.status_mc==='Correcto'?RGB.OK:(a.status_mc==='Incorrecto'?RGB.DANGER:null)});if(a.motivo_error)dataRow('Motivo de Error',a.motivo_error);dataRow('Avance',a.avance);}
+  if(mm.origen){y+=8;sectionHeader('Mesa de Control');dataRow('Origen',mm.origen);if(mm.enriquece_nombre)dataRow('Enriquecimiento por',mm.enriquece_nombre);if(mm.tipo_tarima_t1)dataRow('Tipo Tarima T1',mm.tipo_tarima_t1);if(mm.cant_prime_t1!=null&&mm.cant_prime_t1!=='')dataRow('Prime T1',mm.cant_prime_t1);dataRow('Total Prime',mm.total_prime||0);dataRow('Cantidad MC',mm.cantidad_mc||0);if(mm.ajuste_asset_type)dataRow('Ajuste Asset Type',mm.ajuste_asset_type,{bgColor:(mm.ajuste_asset_type==='SI'||mm.ajuste_asset_type==='SÍ')?RGB.WARN:null});}
+  if(dp.nombre){y+=8;sectionHeader('Despacho');dataRow('Analista',dp.nombre);if(dp.cantidad_mc!=null&&dp.cantidad_mc!=='')dataRow('Cantidad MC',dp.cantidad_mc);if(dp.cantidad_factura!=null&&dp.cantidad_factura!=='')dataRow('Cantidad Factura',dp.cantidad_factura);if(dp.dif_prime_mc!=null&&dp.dif_prime_mc!=='')dataRow('Diferencia Prime/MC',dp.dif_prime_mc,{bgColor:Number(dp.dif_prime_mc)===0?RGB.OK:RGB.DANGER});if(dp.dif_mc_factura!=null&&dp.dif_mc_factura!=='')dataRow('Diferencia MC/Factura',dp.dif_mc_factura,{bgColor:Number(dp.dif_mc_factura)===0?RGB.OK:RGB.DANGER});if(dp.resultado)dataRow('Resultado',dp.resultado,{bgColor:statusBg(dp.resultado)});}
+
+  // ── EVIDENCIAS POR ÁREA ──────────────────────────────────────────────────
+  const evPorArea = rep.evidencias_por_area || {};
+  const evAreas = Object.keys(evPorArea);
+  if (evAreas.length) {
+    newPage();
+    doc.setFont('helvetica','bold'); doc.setFontSize(13);
+    doc.setTextColor(RGB.INK[0],RGB.INK[1],RGB.INK[2]);
+    doc.text('Evidencias', M, y); y+=18;
+
+    for (const area of evAreas) {
+      const items = evPorArea[area] || [];
+      if (!items.length) continue;
+
+      // Section header por área
+      ensureSpace(28);
+      doc.setFillColor(33,37,41);
+      doc.rect(M, y, CONTENT_W, 22, 'F');
+      doc.setFont('helvetica','bold'); doc.setFontSize(10);
+      doc.setTextColor(253,208,0);
+      doc.text(area.toUpperCase() + '  (' + items.length + ')', M+10, y+14.5);
+      y += 24;
+
+      const isDespacho = area === 'despacho';
+
+      for (const ev of items) {
+        const fname = ev.filename || ev.file_id || 'archivo';
+        const isPdf = /\.pdf$/i.test(fname);
+        const isImg = /\.(jpg|jpeg|png|gif|webp)$/i.test(fname);
+        const tsLabel = (ev.timestamp||'').toString().slice(0,16).replace('T',' ');
+
+        if (isDespacho || isPdf) {
+          // ── DESPACHO o PDF: solo link ──────────────────────────────────────
+          ensureSpace(36);
+          doc.setFillColor(RGB.LABEL_BG[0],RGB.LABEL_BG[1],RGB.LABEL_BG[2]);
+          doc.rect(M, y, CONTENT_W, 28, 'F');
+          doc.setDrawColor(RGB.GRID[0],RGB.GRID[1],RGB.GRID[2]);
+          doc.setLineWidth(0.5); doc.rect(M, y, CONTENT_W, 28);
+
+          doc.setFont('helvetica','bold'); doc.setFontSize(9);
+          doc.setTextColor(RGB.INK[0],RGB.INK[1],RGB.INK[2]);
+          doc.text(fname.slice(0,60), M+10, y+11);
+
+          doc.setFont('helvetica','normal'); doc.setFontSize(8);
+          doc.setTextColor(RGB.INK_SOFT[0],RGB.INK_SOFT[1],RGB.INK_SOFT[2]);
+          doc.text(tsLabel + '  ·  ' + (ev.usuario||''), M+10, y+22);
+
+          // Link clickable
+          if (ev.url) {
+            doc.setFont('helvetica','italic'); doc.setFontSize(7.5);
+            doc.setTextColor(0,102,204);
+            const linkText = ev.url.slice(0,80);
+            doc.textWithLink(linkText, PW-M-10, y+11, {url: ev.url, align:'right'});
+          }
+          y += 32;
+
+        } else if (isImg) {
+          // ── EMBARQUE / IMAGEN: fetch base64 y embeber ─────────────────────
+          ensureSpace(44);
+          doc.setFont('helvetica','bold'); doc.setFontSize(8.5);
+          doc.setTextColor(RGB.INK_SOFT[0],RGB.INK_SOFT[1],RGB.INK_SOFT[2]);
+          doc.text(fname.slice(0,60) + '  ·  ' + tsLabel + '  ·  ' + (ev.usuario||''), M, y+12);
+          y += 16;
+
+          if (ev.file_id) {
+            try {
+              toast('Cargando imagen: '+fname.slice(0,20)+'...');
+              const imgRes = await apiGet('get_image_proxy', {file_id: ev.file_id});
+              // apiGet wraps response: {ok, data: {data:b64, mime, name}}
+              const imgPayload = (imgRes && imgRes.ok && imgRes.data) ? imgRes.data : null;
+              if (imgPayload && imgPayload.data) {
+                const b64  = imgPayload.data;
+                const mime = imgPayload.mime || 'image/jpeg';
+                const fmt  = mime.includes('png') ? 'PNG' : (mime.includes('gif') ? 'GIF' : 'JPEG');
+                const dataUrl = 'data:' + mime + ';base64,' + b64;
+
+                // Measure natural dimensions via temporary Image element
+                const MAX_W = CONTENT_W, MAX_H = 220;
+                let iw = MAX_W, ih = MAX_H;
+                try {
+                  await new Promise(resolve => {
+                    const tmpImg = new Image();
+                    tmpImg.onload = () => {
+                      if (tmpImg.naturalWidth > 0 && tmpImg.naturalHeight > 0) {
+                        const ratio = tmpImg.naturalHeight / tmpImg.naturalWidth;
+                        iw = MAX_W;
+                        ih = Math.min(MAX_H, Math.round(iw * ratio));
+                      }
+                      resolve();
+                    };
+                    tmpImg.onerror = resolve;
+                    tmpImg.src = dataUrl;
+                  });
+                } catch(_) {}
+
+                ensureSpace(ih + 14);
+                doc.addImage(dataUrl, fmt, M, y, iw, ih);
+                doc.setDrawColor(RGB.GRID[0], RGB.GRID[1], RGB.GRID[2]);
+                doc.setLineWidth(0.5);
+                doc.rect(M, y, iw, ih);
+                y += ih + 10;
+              } else {
+                // Proxy failed — print link instead
+                doc.setFont('helvetica','italic'); doc.setFontSize(8);
+                doc.setTextColor(150,0,0);
+                doc.text('Imagen no disponible para exportar', M, y+10);
+                if (ev.url) { doc.setTextColor(0,102,204); doc.textWithLink(ev.url.slice(0,80), M, y+20, {url:ev.url}); }
+                y += 28;
+              }
+            } catch(imgErr) {
+              doc.setFont('helvetica','italic'); doc.setFontSize(8);
+              doc.setTextColor(150,0,0);
+              doc.text('Error al cargar imagen: '+fname.slice(0,40), M, y+10);
+              if (ev.url) { doc.setTextColor(0,102,204); doc.textWithLink(ev.url.slice(0,80), M, y+20, {url:ev.url}); }
+              y += 28;
+            }
+          } else {
+            // No file_id — print link
+            doc.setFont('helvetica','italic'); doc.setFontSize(8);
+            doc.setTextColor(0,102,204);
+            if (ev.url) doc.textWithLink(ev.url.slice(0,80), M, y+10, {url:ev.url});
+            y += 20;
+          }
+        } else {
+          // Archivo genérico — link
+          ensureSpace(24);
+          doc.setFont('helvetica','normal'); doc.setFontSize(8.5);
+          doc.setTextColor(RGB.INK[0],RGB.INK[1],RGB.INK[2]);
+          doc.text(fname.slice(0,60) + '  ·  ' + tsLabel, M, y+12);
+          if (ev.url) { doc.setFont('helvetica','italic'); doc.setFontSize(7.5); doc.setTextColor(0,102,204); doc.textWithLink(ev.url.slice(0,80), M, y+22, {url:ev.url}); }
+          y += 30;
+        }
+      } // end items loop
+      y += 8;
+    } // end area loop
+  } // end if evAreas.length
+
+  // ── Also show evidencias from evidencias_urls column (fallback) ──────────
+  const evUrlStr = (rep.embarque&&rep.embarque.evidencias_urls) ? rep.embarque.evidencias_urls.toString().trim() : '';
+  if (evUrlStr && !evAreas.length) {
+    newPage();
+    doc.setFont('helvetica','bold'); doc.setFontSize(13);
+    doc.setTextColor(RGB.INK[0],RGB.INK[1],RGB.INK[2]);
+    doc.text('Evidencias (registradas en hoja)', M, y); y+=18;
+    const urlLines = evUrlStr.split('\n').filter(l=>l.trim());
+    for (const line of urlLines) {
+      const lm = line.match(/^\[([^\]]+)\]\s*(.+)$/);
+      if (!lm) continue;
+      const tag=lm[1], rawUrl=lm[2].trim();
+      const parts=tag.split(':'); const areaLabel=parts[0]; const fname=parts.slice(1).join(':')||'';
+      const isDesp = areaLabel==='despacho';
+      ensureSpace(32);
+      doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(RGB.INK[0],RGB.INK[1],RGB.INK[2]);
+      doc.text((fname||areaLabel).slice(0,60), M, y+12);
+      doc.setFont('helvetica','italic'); doc.setFontSize(7.5); doc.setTextColor(0,102,204);
+      doc.textWithLink(rawUrl.slice(0,80), M, y+22, {url:rawUrl});
+      y += 30;
+    }
+  }
+
+  const totalPages=doc.internal.getNumberOfPages();
+  for(let i=1;i<=totalPages;i++){doc.setPage(i);doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(150,150,150);doc.text('Aplicacion de Auditoria de Pallets · '+(r.unidad||''),M,PH-18);doc.text(i+' / '+totalPages,PW-M,PH-18,{align:'right'});}
+  const safeUnidad=String(r.unidad||r.resumen?.unidad||'reporte').replace(/[^A-Za-z0-9_-]/g,'_');
+  doc.save('reporte_'+safeUnidad+'_'+new Date().toISOString().slice(0,10)+'.pdf');
+  toast('PDF generado','success');
+}
+
+function renderReporteUnidad(rep) {
+  const {resumen,tabs,evidencias_por_area,historial}=rep;
+  const inSup=document.getElementById('tab-sup-reporte')?.classList.contains('active');
+  const target=inSup?document.getElementById('reporte-resultado'):document.getElementById('modal-reporte-body');
+  if(!inSup){document.getElementById('modal-reporte').classList.add('open');}
+  const kpiStrip=`<div class="kpi-strip"><div class="kpi kpi-brand"><div class="kpi-label">Fotografias</div><div class="kpi-value">${resumen.total_fotografias}</div></div><div class="kpi kpi-yellow"><div class="kpi-label">Total Pallets</div><div class="kpi-value">${resumen.total_pallets}</div><div class="kpi-foot">${resumen.total_chep} CHEP · ${resumen.total_blancas} Bl.</div></div><div class="kpi"><div class="kpi-label">Auditores</div><div class="kpi-value">${resumen.conteo_auditores||0}</div></div><div class="kpi kpi-ok"><div class="kpi-label">Resultado</div><div class="kpi-value" style="font-size:18px">${resumen.resultado}</div></div></div>`;
+  const headerInfo=`<div class="card"><div class="card-title"><span class="ct-dot"></span>${resumen.unidad} · ${resumen.cliente}</div><div class="detail-grid"><div class="dt-item dt-brand"><span class="dt-label">Estado Global</span><span class="dt-value"><span class="status ${(resumen.estado_global||'').toLowerCase()}">${resumen.estado_global||'—'}</span></span></div><div class="dt-item"><span class="dt-label">Cortina</span><span class="dt-value">${resumen.cortina||'—'}</span></div><div class="dt-item"><span class="dt-label">UE Fecha / Hora</span><span class="dt-value">${formatISOtoDisplay_(resumen.ue_fecha)||'—'} ${resumen.ue_hora||''}</span></div><div class="dt-item"><span class="dt-label">Areas</span><span class="dt-value" style="font-size:11px">${(resumen.areas_participantes||[]).join(' · ')||'—'}</span></div>${resumen.seguimiento_despacho?'<div class="dt-item dt-yellow" style="grid-column:1/-1"><span class="dt-label">Seguimiento</span><span class="dt-value">'+resumen.seguimiento_despacho+'</span></div>':''}</div></div>`;
+  const a=tabs.embarque.auditor||{},m=tabs.embarque.mesa||{},dp=tabs.embarque.despacho||{};
+  const embarqueArea=`<div class="area-content active" data-area="embarque"><div class="card"><div class="card-title"><span class="ct-dot"></span>Auditor</div><div class="detail-grid"><div class="dt-item"><span class="dt-label">Nombre</span><span class="dt-value">${a.nombre||'—'}</span></div><div class="dt-item"><span class="dt-label">Turno / Cuadrilla</span><span class="dt-value">${a.turno||'—'} / ${a.cuadrilla||'—'}</span></div><div class="dt-item"><span class="dt-label">Tipo Auditoria</span><span class="dt-value">${a.tipo_auditoria||'—'}</span></div><div class="dt-item ${(a.status_mc||'').includes('Incorrecto')?'dt-danger':'dt-ok'}"><span class="dt-label">Status MC</span><span class="dt-value">${a.status_mc||'—'}</span></div>${a.motivo_error?'<div class="dt-item dt-danger"><span class="dt-label">Motivo Error</span><span class="dt-value">'+a.motivo_error+'</span></div>':''}</div></div><div class="card"><div class="card-title ct-mesa"><span class="ct-dot"></span>Mesa de Control</div><div class="detail-grid"><div class="dt-item"><span class="dt-label">Origen</span><span class="dt-value">${m.origen||'—'}</span></div><div class="dt-item"><span class="dt-label">Enriquece por</span><span class="dt-value">${m.enriquece_nombre||'—'}</span></div><div class="dt-item dt-brand"><span class="dt-label">Total Prime</span><span class="dt-value">${m.total_prime||0}</span></div><div class="dt-item dt-brand"><span class="dt-label">Cantidad MC</span><span class="dt-value">${m.cantidad_mc||0}</span></div></div></div><div class="card"><div class="card-title ct-despacho"><span class="ct-dot"></span>Despacho</div><div class="detail-grid"><div class="dt-item"><span class="dt-label">Analista</span><span class="dt-value">${dp.nombre||'—'}</span></div><div class="dt-item ${Number(dp.dif_prime_mc)===0?'dt-ok':'dt-danger'}"><span class="dt-label">Dif. Prime/MC</span><span class="dt-value">${dp.dif_prime_mc!=null?dp.dif_prime_mc:'—'}</span></div><div class="dt-item ${Number(dp.dif_mc_factura)===0?'dt-ok':'dt-danger'}"><span class="dt-label">Dif. MC/Factura</span><span class="dt-value">${dp.dif_mc_factura!=null?dp.dif_mc_factura:'—'}</span></div><div class="dt-item ${dp.resultado==='OK'?'dt-ok':'dt-danger'}"><span class="dt-label">Resultado</span><span class="dt-value">${dp.resultado||'—'}</span></div></div></div></div>`;
+  const reciboItems=tabs.recibo.items||[];
+  const reciboArea=`<div class="area-content" data-area="recibo">${reciboItems.length?reciboItems.map(r=>'<div class="card"><div class="card-title"><span class="ct-dot"></span>STO '+r.sto+' · Cortina '+r.cortina+'</div><div class="detail-grid"><div class="dt-item"><span class="dt-label">Master Receipt</span><span class="dt-value">'+r.master+'</span></div><div class="dt-item"><span class="dt-label">Auditor</span><span class="dt-value">'+r.auditor+'</span></div><div class="dt-item"><span class="dt-label">CHEP</span><span class="dt-value">'+r.pallets_chep+'</span></div><div class="dt-item"><span class="dt-label">Blancas</span><span class="dt-value">'+r.pallets_blancas+'</span></div></div></div>').join(''):'<div class="empty"><div class="em-icon">📦</div><div class="em-title">Sin registros de recibo asociados</div></div>'}</div>`;
+
+  // FIX: evidencias con visor PDF embebido
+  const evFromSheet = renderEvidenciasUrlsBlock_((rep.embarque||{}).evidencias_urls||'');
+  evAreaContent = Object.keys(evidencias_por_area||{}).length===0 && !evFromSheet
+    ? '<div class="empty"><div class="em-icon">📸</div><div class="em-title">Sin evidencias</div></div>'
+    : (Object.entries(evidencias_por_area||{}).map(([area,items])=>`<div class="card"><div class="card-title"><span class="ct-dot"></span>${area.toUpperCase()} (${items.length})</div><div class="evidence-grid">${items.map(e=>buildEvidenciaCard(e)).join('')}</div></div>`).join('')
+      + (evFromSheet && Object.keys(evidencias_por_area||{}).length===0 ? '<div class="card"><div class="card-title"><span class="ct-dot"></span>EVIDENCIAS REGISTRADAS</div><div style="padding:10px">' + evFromSheet + '</div></div>' : ''));
+  const evArea=`<div class="area-content" data-area="evidencias">${evAreaContent}</div>`;
+
+  const histArea=`<div class="area-content" data-area="historial"><div class="card"><div class="card-title"><span class="ct-dot"></span>Trazabilidad</div>${historial.length===0?'<div class="empty"><div class="em-icon">⏱</div><div class="em-title">Sin historial</div></div>':'<div class="timeline">'+historial.map(h=>'<div class="tl-item"><div class="tl-head">'+h.accion+' · '+h.usuario+'</div><div class="tl-meta">'+((h.timestamp||'').replace('T',' ').slice(0,19))+(h.turno?' · '+h.turno:'')+'</div>'+(h.detalle?'<div class="tl-detail">'+h.detalle+'</div>':'')+'</div>').join('')+'</div>'}</div></div>`;
+  window.__lastReporte=rep;
+  target.innerHTML=`
+    <div class="card" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <div style="flex:1;min-width:160px"><div style="font-weight:700;color:var(--ink)">Exportar Reporte</div><div style="color:var(--gray-500);font-size:11px">PDF con encabezado institucional</div></div>
+      <button class="btn btn-primary btn-sm" onclick="exportarReportePDF()">Descargar PDF</button>
+    </div>
+    ${kpiStrip}${headerInfo}
+    <div class="area-tabs">
+      <div class="area-tab active" data-area="embarque" onclick="switchAreaTab(this,'embarque')">Embarque</div>
+      <div class="area-tab" data-area="recibo" onclick="switchAreaTab(this,'recibo')">Recibo</div>
+      <div class="area-tab" data-area="evidencias" onclick="switchAreaTab(this,'evidencias')">Evidencias</div>
+      <div class="area-tab" data-area="historial" onclick="switchAreaTab(this,'historial')">Historial</div>
+    </div>
+    ${embarqueArea}${reciboArea}${evArea}${histArea}
+  `;
+}
+
+function switchAreaTab(el, area) {
+  el.parentElement.querySelectorAll('.area-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  el.parentElement.parentElement.querySelectorAll('.area-content').forEach(c=>c.classList.toggle('active',c.dataset.area===area));
+}
+
+// ════════════════════════════════════════════════════════════════
+//  PHOTOS / EVIDENCIAS
+// ════════════════════════════════════════════════════════════════
+function compressImage(file,maxW,maxH,quality) {
+  maxW=maxW||960;maxH=maxH||960;quality=quality||0.68;
+  return new Promise((resolve)=>{
+    if(!file.type.startsWith('image/'))return fileToBase64(file).then(resolve);
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const img=new Image();
+      img.onload=()=>{
+        let w=img.width,h=img.height;
+        if(w>maxW){h=Math.round(h*maxW/w);w=maxW;}
+        if(h>maxH){w=Math.round(w*maxH/h);h=maxH;}
+        const c=document.createElement('canvas');c.width=w;c.height=h;
+        const ctx=c.getContext('2d');ctx.imageSmoothingQuality='medium';ctx.drawImage(img,0,0,w,h);
+        resolve({name:file.name||('img_'+Date.now()+'.jpg'),data:c.toDataURL('image/jpeg',quality),type:'image/jpeg'});
+      };
+      img.src=e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+function fileToBase64(file){
+  return new Promise((res)=>{const r=new FileReader();r.onload=e=>res({name:file.name,data:e.target.result,type:file.type});r.readAsDataURL(file);});
+}
+
+function updateEmbarquePhotoHint() {
+  const hint = document.getElementById('embarque-photo-hint');
+  if (!hint) return;
+  const estado = getToggleValue('e-estado');
+  const esHerencia = estado && estado.includes('Herencia');
+  const count = (photos.embarque||[]).length;
+  if (esHerencia) {
+    const ok = count >= 2;
+    hint.style.color = ok ? 'var(--ok)' : 'var(--danger)';
+    hint.textContent = ok
+      ? '✓ ' + count + ' foto(s) — requerimiento de herencia cumplido'
+      : '⚠ Herencia requiere mínimo 2 fotos (' + count + '/2 capturadas)';
+  } else {
+    hint.style.color = count > 0 ? 'var(--ok)' : 'var(--ink-soft)';
+    hint.textContent = count > 0 ? '✓ ' + count + ' foto(s) lista(s)' : '';
+  }
+}
+
+async function handlePhotos(event,key){
+  const files=Array.from(event.target.files);
+  if(!photos[key])photos[key]=[];
+  showProgress(key,0);
+  // Embarque/asset_type: compress harder to reduce upload time (800px, 0.52 quality)
+  // Recibo: slightly larger for legibility
+  const isAudit = (key==='embarque'||key==='asset');
+  const maxDim = isAudit ? 800 : 900;
+  const qual   = isAudit ? 0.52 : 0.62;
+  const compressed=await Promise.all(files.map(f=>compressImage(f,maxDim,maxDim,qual)));
+  compressed.forEach(c=>photos[key].push(c));
+  showProgress(key,90);renderPhotos(key);showProgress(key,100);
+  if(key==='embarque') updateEmbarquePhotoHint();
+  setTimeout(()=>showProgress(key,101),400);
+}
+function renderPhotos(key){
+  const c=document.getElementById('ph-'+key);
+  if(!c||!photos[key])return;
+  c.innerHTML=photos[key].map((p,i)=>'<div class="photo-thumb"><img src="'+p.data+'"><button class="ph-del" onclick="deletePhoto(\''+key+'\','+i+')">x</button></div>').join('');
+}
+function deletePhoto(key,idx){photos[key].splice(idx,1);renderPhotos(key);}
+function showProgress(key,pct){
+  const bar=document.getElementById('pg-'+key);if(!bar)return;
+  bar.classList.toggle('visible',pct<100);
+  const inner=bar.querySelector('.inner');if(inner)inner.style.width=pct+'%';
+}
+function renderEvidenciaUrl_(line) {
+  const m = line.match(/^\[([^\]]+)\]\s*(.+)$/);
+  if (!m) return '';
+  const tag    = m[1];          // 'despacho:factura.pdf' or 'embarque'
+  const rawUrl = m[2].trim();
+  const parts  = tag.split(':');
+  const area   = parts[0];
+  const fname  = parts.slice(1).join(':') || '';  // filename if encoded
+  const displayName = fname || area;
+
+  // Detect type: from encoded filename, then from raw URL, then from mime hint
+  const isPdf = /\.pdf$/i.test(fname) || /\.pdf(\?|$)/i.test(rawUrl);
+  const isImg = /\.(jpg|jpeg|png|gif|webp)$/i.test(fname) || /\.(jpg|jpeg|png|gif|webp)(\?|$)/i.test(rawUrl);
+
+  if (isPdf) {
+    // Drive /view URLs return 403 in iframes; must use /preview
+    const previewUrl = rawUrl.replace(/\/view(\?.*)?$/,'/preview').replace(/\/edit(\?.*)?$/,'/preview');
+    return '<div class="pdf-viewer-wrap" style="margin-bottom:8px">' +
+      '<div class="pdf-viewer-toolbar">' +
+        '<span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:160px" title="'+displayName+'">'+displayName+'</span>' +
+        '<a href="'+rawUrl+'" target="_blank" class="btn-open">Abrir</a>' +
+        '<a href="'+rawUrl+'" download class="btn-dl">Descargar</a>' +
+      '</div>' +
+      '<iframe class="pdf-viewer-iframe" src="'+previewUrl+'" loading="lazy" allow="autoplay"></iframe>' +
+    '</div>';
+  }
+  if (isImg) {
+    return '<a href="'+rawUrl+'" target="_blank" style="display:inline-block;margin:4px">' +
+      '<img src="'+rawUrl+'" alt="'+displayName+'" style="max-width:100%;max-height:120px;border-radius:6px;border:1px solid var(--gray-200)">' +
+    '</a>';
+  }
+  // Generic file link
+  return '<a href="'+rawUrl+'" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--r-xs);background:var(--gray-100);font-size:11px;font-weight:600;color:var(--ink);text-decoration:none;margin:3px;border:1px solid var(--gray-200)">' +
+    '<span style="font-size:16px">📄</span>'+displayName+
+  '</a>';
+}
+
+// Renderiza el bloque completo de evidencias_urls (string multilinea) como HTML
+function renderEvidenciasUrlsBlock_(urlsStr) {
+  if (!urlsStr) return '';
+  const lines = urlsStr.toString().trim().split('\n').filter(l => l.trim());
+  if (!lines.length) return '';
+  return lines.map(renderEvidenciaUrl_).join('');
+}
+
+const _CHUNK_CHARS   = 90 * 1024;  
+const _DIRECT_LIMIT  = 180 * 1024;  
+
+async function uploadEvidenceDespacho_(id, doc) {
+  if (!doc || !doc.data) return false;
+  const base64 = doc.data.split(',')[1];
+  if (!base64) return false;
+  const mime  = doc.data.split(';')[0].split(':')[1] || 'application/pdf';
+  const fname = doc.name || ('despacho_' + Date.now() + '.pdf');
+  const b64len = base64.length;
+  const kb     = Math.round(b64len / 1024);
+
+  if (b64len <= _DIRECT_LIMIT) {
+    // ── Ruta directa (base64 < 180 KB de chars) ─────────────────────────
+    for (let attempt = 0; attempt < 4; attempt++) {
+      if (attempt > 0) {
+        toast('Reintentando evidencia (' + attempt + '/3)...');
+        await new Promise(r => setTimeout(r, 2000 * attempt));
+      }
+      try {
+        const res = await apiPost('upload_evidence', {
+          id, modulo: 'embarque', tipo: 'despacho', area: 'despacho',
+          base64data: base64, mimeType: mime, filename: fname, usuario: session.name
+        });
+        if (res && !res._opaque && res.ok !== false) {
+          if (res.data && res.data.sheet_updated === false) {
+            console.warn('uploadEvidenceDespacho_ sheet_updated=false:', res.data.warning);
+            toast('Evidencia en Drive pero no vinculada al registro. ID: ' + id.slice(-8), 'warn');
+          }
+          return true;
+        }
+      } catch(e) { /* reintento */ }
+    }
+    console.error('[despacho directo] 4 intentos fallidos. id:', id, 'fname:', fname);
+    return false;
+  }
+  const totalChunks = Math.ceil(b64len / _CHUNK_CHARS);
+  const uploadId    = 'dsp_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+  toast('PDF ' + kb + ' KB — enviando en ' + totalChunks + ' parte(s)...');
+  console.log('[despacho chunked] id:', id, 'b64:', b64len, 'chunks:', totalChunks, 'upload_id:', uploadId);
+
+  for (let i = 0; i < totalChunks; i++) {
+    const chunk  = base64.slice(i * _CHUNK_CHARS, (i + 1) * _CHUNK_CHARS);
+    const isLast = (i === totalChunks - 1);
+    toast('Parte ' + (i + 1) + ' / ' + totalChunks + '...');
+    let chunkOk = false;
+    console.log('[despacho chunk', i, '] size:', chunk.length, 'chars —', Math.round(chunk.length/1024), 'KB');
+    for (let attempt = 0; attempt < 4 && !chunkOk; attempt++) {
+      if (attempt > 0) await new Promise(r => setTimeout(r, 2000 * attempt));
+      try {
+        const res = await apiPost('upload_evidence_chunk', {
+          upload_id: uploadId,
+          chunk_index: i,
+          total_chunks: totalChunks,
+          is_last: isLast,
+          id, modulo: 'embarque', tipo: 'despacho', area: 'despacho',
+          base64data: chunk,
+          mimeType: mime,
+          filename: fname,
+          usuario: session.name
+        });
+        if (res && !res._opaque && res.ok !== false) {
+          chunkOk = true;
+          if (isLast) {
+            if (res.data && res.data.sheet_updated === false) {
+              console.warn('uploadEvidenceDespacho_ último chunk sheet_updated=false');
+              toast('Evidencia en Drive pero no vinculada al registro. ID: ' + id.slice(-8), 'warn');
+            } else if (res.data && res.data.url) {
+              console.log('[despacho chunked] OK — url:', res.data.url);
+            }
+          }
+        } else {
+          console.warn('[despacho chunk', i, '] attempt', attempt,
+            'falló — ok:', res && res.ok, 'opaque:', res && res._opaque,
+            'error:', res && res.error, 'full:', JSON.stringify(res));
+        }
+      } catch(e) {
+        console.warn('[despacho chunk', i, '] attempt', attempt, 'excepción:', e && e.message, e);
+      }
+    }
+    if (!chunkOk) {
+      console.error('[despacho chunk] FAILED definitivo en chunk', i, '— upload_id:', uploadId);
+      return false;
+    }
+    if (!isLast) await new Promise(r => setTimeout(r, 500));
+  }
+  return true;
+}
+
+async function uploadEvidence(id,modulo,tipo,area,photo){
+  if(!photo||!photo.data)return;
+  const base64=photo.data.split(',')[1];
+  const mime=photo.data.split(';')[0].split(':')[1]||'image/jpeg';
+  const fname=photo.name||('ev_'+Date.now()+'.jpg');
+  const res = await apiPost('upload_evidence',{id,modulo,tipo,area,base64data:base64,mimeType:mime,filename:fname,usuario:session.name});
+  if (res&&res._opaque) return {ok:false, error:'timeout_opaque'};
+  if (res&&res.ok&&res.data&&res.data.sheet_updated===false) {
+    console.warn('uploadEvidence sheet_updated=false:', res.data.warning);
+    toast('⚠ Evidencia subida a Drive pero no vinculada al registro. ID: '+id.slice(-8),'warn');
+  }
+  return res;
+}
+async function uploadEvidencesBatch(id,modulo,area,photoArr){
+  if(!photoArr||!photoArr.length)return[];
+  const results = [];
+  let failed = 0;
+  for (let i=0; i<photoArr.length; i++) {
+    const ph = photoArr[i];
+    const fname = ph.name||('archivo_'+(i+1));
+    toast('Evidencia '+(i+1)+'/'+photoArr.length+' — '+fname.slice(0,22)+'...');
+    let ok = false;
+    for (let attempt=0; attempt<3 && !ok; attempt++) {
+      if (attempt>0) {
+        const wait = attempt===1 ? 2000 : 4000;
+        toast('Reintentando ('+(attempt+1)+'/3)...');
+        await new Promise(w=>setTimeout(w,wait));
+      }
+      try {
+        const r = await uploadEvidence(id, modulo, area, area, ph);
+        if (r && r.ok !== false && !r._opaque) { results.push({...r, fname}); ok=true; }
+      } catch(e) { /* retry */ }
+    }
+    if (!ok) {
+      failed++;
+      console.warn('[upload] FAILED:', fname, 'id:', id, 'area:', area);
+    }
+    if (i < photoArr.length-1) await new Promise(w => setTimeout(w, 600));
+  }
+  const ok_count = photoArr.length - failed;
+  if (failed>0) toast(ok_count+' subida(s) · '+failed+' fallaron — ID:'+id.slice(-8),'warn');
+  else if (ok_count>0) toast(ok_count+' evidencia(s) guardadas en hoja','ok');
+  return results;
+}
+
+// ════════════════════════════════════════════════════════════════
+//  API HELPERS
+// ════════════════════════════════════════════════════════════════
+async function apiPost(action,payload){
+  const body=JSON.stringify({action,...payload});
+  const bodyBytes = new TextEncoder().encode(body).length;
+  // keepalive:true tiene límite de 64 KB — omitir para chunks grandes
+  const useKeepalive = bodyBytes < 60000;
+  if (!useKeepalive) {
+    // Ruta directa para chunks — sin keepalive, sin AbortController
+    try {
+      const r = await Promise.race([
+        fetch(API_URL, {method:'POST', mode:'cors', headers:{'Content-Type':'text/plain;charset=utf-8'}, body}),
+        new Promise((_,rej) => setTimeout(() => rej(new Error('timeout_manual')), 90000))
+      ]);
+      if (r.ok) return await r.json();
+      return {ok:false, error:'http_'+r.status};
+    } catch(e) {
+      console.error('[apiPost chunk] '+action+' — bytes:'+bodyBytes+' error:'+e.name+':'+e.message);
+      return {ok:false, error:'sin_conexion_chunk'};
+    }
+  }
+  // Ruta normal para peticiones pequeñas — con keepalive y AbortController
+  const fetchWithTimeout = async (url, opts, ms) => {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), ms);
+    try {
+      const r = await fetch(url, {...opts, signal: ctrl.signal});
+      clearTimeout(timer);
+      return r;
+    } catch(e) { clearTimeout(timer); throw e; }
+  };
+  try{
+    const r=await fetchWithTimeout(API_URL,{method:'POST',mode:'cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body,keepalive:true},90000);
+    if(r.ok)return await r.json();
+    return{ok:false,error:'http_'+r.status};
+  }catch(e){
+    try{await fetch(API_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body,keepalive:true});return{ok:true,data:{},_opaque:true};}catch(e2){return{ok:false,error:'sin_conexion'};}
+  }
+}
+function apiGet(action,params){
+  return new Promise((resolve)=>{
+    const cb='_cb_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);
+    const q=new URLSearchParams({action,...params,callback:cb}).toString();
+    const s=document.createElement('script');s.src=API_URL+'?'+q;
+    const t=setTimeout(()=>{delete window[cb];s.remove();resolve({ok:false,error:'timeout'});},15000);
+    window[cb]=(data)=>{clearTimeout(t);delete window[cb];s.remove();resolve(data);};
+    s.onerror=()=>{clearTimeout(t);delete window[cb];s.remove();resolve({ok:false,error:'net'});};
+    document.head.appendChild(s);
+  });
+}
+async function syncBootstrap(){
+  const res=await apiGet('bootstrap',{});
+  if(res&&res.ok&&res.data){
+    if(Array.isArray(res.data.catalogo)&&res.data.catalogo.length){
+      const g={auditor:[],mesa:[],despacho:[],supervisor:[]};
+      res.data.catalogo.forEach(r=>{if(g[r.rol])g[r.rol].push(r.nombre);});
+      Object.keys(g).forEach(k=>{if(g[k].length)catalogo[k]=g[k];});
+    }
+    if(Array.isArray(res.data.pendientes)){
+      pendientes=res.data.pendientes;saveState();
+      if(session.role==='auditor')renderPendientesAuditor();
+      if(session.role==='mesa')renderMesaAsignaciones();
+      if(session.role==='despacho')renderDespEnriquecidas();
+    }
+  }
+}
+async function syncPendientes(){
+  const res=await apiGet('get_pendientes',{rol:session.role||''});
+  if(res&&res.ok&&Array.isArray(res.data)){
+    pendientes=res.data;saveState();
+    if(session.role==='auditor')renderPendientesAuditor();
+    if(session.role==='mesa')renderMesaAsignaciones();
+    if(session.role==='despacho')renderDespEnriquecidas();
+  }
+}
+async function syncCatalogo(){
+  const res=await apiGet('get_catalogo',{rol:''});
+  if(res&&res.ok&&Array.isArray(res.data)&&res.data.length){
+    const g={auditor:[],mesa:[],despacho:[],supervisor:[]};
+    res.data.forEach(r=>{if(g[r.rol])g[r.rol].push(r.nombre);});
+    Object.keys(g).forEach(k=>{if(g[k].length)catalogo[k]=g[k];});
+  }
+}
+async function getInstitutionalLogo(){
+  if(window.__instLogo)return window.__instLogo;
+  try{const cached=localStorage.getItem('inst_logo_v1');if(cached){const parsed=JSON.parse(cached);if(parsed&&parsed.data&&parsed.w&&parsed.h){window.__instLogo=parsed;return parsed;}}}catch(_){}
+  const res=await apiGet('get_dhl_logo',{});
+  if(!res||!res.ok||!res.data||!res.data.data)return null;
+  const dataUrl='data:'+(res.data.mime||'image/png')+';base64,'+res.data.data;
+  return new Promise((resolve)=>{
+    const img=new Image();
+    img.onload=()=>{const out={data:dataUrl,w:img.naturalWidth,h:img.naturalHeight};window.__instLogo=out;try{localStorage.setItem('inst_logo_v1',JSON.stringify(out));}catch(_){}resolve(out);};
+    img.onerror=()=>resolve(null);img.src=dataUrl;
+  });
+}
+
+// ════════════════════════════════════════════════════════════════
+//  UTILS
+// ════════════════════════════════════════════════════════════════
+function formatISOtoDisplay_(iso) {
+  if (!iso) return '';
+  const m = String(iso).trim().match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (m) return m[3]+'/'+m[2]+'/'+m[1];
+  return iso;
+}
+function toggleSelect(el,groupId,extraClass){
+  document.querySelectorAll('#'+groupId+' .toggle-opt').forEach(o=>o.classList.remove('selected','ok','yellow'));
+  el.classList.add('selected');
+  if(extraClass)el.classList.add(extraClass);
+}
+function getToggleValue(groupId){
+  const s=document.querySelector('#'+groupId+' .toggle-opt.selected');
+  return s?s.textContent.trim():'';
+}
+function closeModal(id){document.getElementById(id)?.classList.remove('open');}
+function toast(msg,type=''){
+  const t=document.getElementById('toast');if(!t)return;
+  t.textContent=msg;t.className='toast '+type;void t.offsetWidth;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+// ════════════════════════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════════════════════════
+window.onload=()=>{
+  loadState();
+  if(session.name&&session.role){hideSplash();updateHeader();buildApp();setTimeout(syncBootstrap,200);}
+  setupAssetPasteListener();
+  document.addEventListener('input',(e)=>{
+    const el=e.target;if(!el||!el.tagName)return;
+    const skip=el.type==='date'||el.type==='time'||el.type==='datetime-local'||el.type==='number'||el.type==='email'||el.type==='password';
+    if(skip)return;
+    if((el.tagName==='INPUT'&&(el.type==='text'||!el.type))||el.tagName==='TEXTAREA'){
+      if(el.id==='mesa-paste'||el.id==='mesa-nota'||el.id==='r-notas'||el.id==='dp-seguimiento'||el.id==='cancel-obs')return;
+      const s=el.selectionStart,en=el.selectionEnd;
+      el.value=el.value.toUpperCase();
+      try{el.setSelectionRange(s,en);}catch(_){}
+    }
+  });
+
+  const hb = document.getElementById('recibo-heritage'); if(hb){hb.classList.add('hidden');hb.innerHTML='';}};
+</script>
+</body>
+</html>
